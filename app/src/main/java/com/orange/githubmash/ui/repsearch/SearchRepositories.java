@@ -95,7 +95,7 @@ public class SearchRepositories extends AppCompatActivity {
                 Intent replyintent = new Intent();
                 RemoteRepoModel rep = adapter.getRepAtPosition(position);
                 replyintent.putExtra(SearchRepositories.REPL_name, rep.getmName());
-                replyintent.putExtra(SearchRepositories.REPL_owner, rep.getOwner());
+                replyintent.putExtra(SearchRepositories.REPL_owner, rep.getOwner().getLogin());
                 replyintent.putExtra(SearchRepositories.REPL_description, rep.getmDescription());
                 replyintent.putExtra(SearchRepositories.REPL_url, rep.getmUrl());
                 replyintent.putExtra(SearchRepositories.REPL_watchers, rep.getmWatchers());

@@ -1,21 +1,29 @@
 package com.orange.githubmash.ui.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.local.GitHubRepository;
+import com.orange.githubmash.ui.settings.Settings;
+
 import java.util.List;
 
 /* renamed from: com.orange.githubmash.ui.home.LocalRepoListAdapter */
 public class LocalRepoListAdapter extends Adapter<LocalRepoListAdapter.LocalRepoViewHolder> {
     private final LayoutInflater mInflater;
     private List<GitHubRepository> mRepos;
-
+    private SharedPreferences appsettings;
+    private Boolean show_owner ;
+    private Boolean show_descr ;
+    private Boolean show_watchers;
     /* renamed from: com.orange.githubmash.ui.home.LocalRepoListAdapter$LocalRepoViewHolder */
     class LocalRepoViewHolder extends ViewHolder {
         /* access modifiers changed from: private */
@@ -38,6 +46,11 @@ public class LocalRepoListAdapter extends Adapter<LocalRepoListAdapter.LocalRepo
 
     public LocalRepoListAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
+        appsettings= PreferenceManager.getDefaultSharedPreferences(context);
+        show_owner = appsettings.getBoolean(Settings.fav_owner,false);
+        show_descr = appsettings.getBoolean(Settings.fav_descr, false);
+        show_watchers = appsettings.getBoolean(Settings.fav_watchers, false);
+
     }
 
     public LocalRepoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,6 +65,19 @@ public class LocalRepoListAdapter extends Adapter<LocalRepoListAdapter.LocalRepo
             holder.repoOwner.setText(current.getOwner());
             holder.repoDescription.setText(current.getDescription());
             holder.repoWatchers.setText(String.valueOf(current.getWatchers()));
+
+            if(!show_owner)
+            {
+                holder.repoOwner.setVisibility(View.GONE);
+            }
+            if(!show_descr)
+            {
+                holder.repoDescription.setVisibility(View.GONE);
+            }
+            if(!show_watchers)
+            {
+                holder.repoWatchers.setVisibility(View.GONE);
+            }
             return;
         }
         String str = "NA";

@@ -1,21 +1,32 @@
 package com.orange.githubmash.ui.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
+import com.orange.githubmash.MainActivity;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteRepoModel;
+import com.orange.githubmash.ui.settings.Settings;
+
 import java.util.List;
 
 /* renamed from: com.orange.githubmash.ui.home.RepoListAdapter */
 public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
     private final LayoutInflater mInflater;
     private List<RemoteRepoModel> mRepos;
-
+    private SharedPreferences appsettings;
+    private Boolean show_owner ;
+    private Boolean show_descr ;
+    private Boolean show_watchers;
     /* renamed from: com.orange.githubmash.ui.home.RepoListAdapter$RepoViewHolder */
     class RepoViewHolder extends ViewHolder {
         /* access modifiers changed from: private */
@@ -38,6 +49,22 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
 
     public RepoListAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
+        appsettings= PreferenceManager.getDefaultSharedPreferences(context);
+        if(context.getClass()== MainActivity.class) {
+            show_owner = appsettings.getBoolean(Settings.me_owner,false);
+            show_descr = appsettings.getBoolean(Settings.me_descr, false);
+            show_watchers = appsettings.getBoolean(Settings.me_watchers, false);
+        }
+
+        else
+        {
+            show_owner = true;
+            show_descr = true;
+            show_watchers = true;
+
+        }
+
+
     }
 
     public RepoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,6 +79,19 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
             holder.repoOwner.setText(current.getOwner().getLogin());
             holder.repoDescription.setText(current.getmDescription());
             holder.repoWatchers.setText(String.valueOf(current.getmWatchers()));
+
+            if(!show_owner)
+            {
+                holder.repoOwner.setVisibility(View.GONE);
+            }
+            if(!show_descr)
+            {
+                holder.repoDescription.setVisibility(View.GONE);
+            }
+            if(!show_watchers)
+            {
+                holder.repoWatchers.setVisibility(View.GONE);
+            }
             return;
         }
         String str = "NA";

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginBottom="8dp">
 
     <TextView
         android:id="@+id/myrepname"
@@ -37,7 +38,6 @@
         android:id="@+id/Updated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:background="#4F5AC3"
         android:contentDescription="Updated At"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"

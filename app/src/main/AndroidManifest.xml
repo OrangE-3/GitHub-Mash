@@ -12,7 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.usersearch.SearchUsres"></activity>
+        <activity android:name=".ui.settings.Settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity android:name=".ui.usersearch.SearchUsres" />
         <activity android:name=".ui.repsearch.SearchRepositories" />
         <activity android:name=".Login">
             <intent-filter>

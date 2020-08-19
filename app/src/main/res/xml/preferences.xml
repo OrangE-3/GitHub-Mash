@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="My Repositories">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="me_owner"
+            android:title="Show Owner" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="me_descr"
+            android:title="Show Description" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="me_watchers"
+            android:title="Show Watcher Count" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Favorite Repositories">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="fav_owner"
+            android:title="Show Owner" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="fav_descr"
+            android:title="Show Description" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="fav_watchers"
+            android:title="Show Watcher Count" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Favorite Users">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="user_urrl"
+            android:title="Show URL" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="user_avatar"
+            android:title="Show Avatar" />
+    </PreferenceCategory>
+</PreferenceScreen>

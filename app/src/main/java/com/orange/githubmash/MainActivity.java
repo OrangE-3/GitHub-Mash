@@ -26,6 +26,7 @@ import com.orange.githubmash.ui.home.FavUsersFragment;
 import com.orange.githubmash.ui.home.FavUsersViewModel;
 import com.orange.githubmash.ui.home.MyRepoViewModel;
 import com.orange.githubmash.ui.repsearch.SearchRepositories;
+import com.orange.githubmash.ui.settings.Settings;
 import com.orange.githubmash.ui.usersearch.SearchUsres;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         initFabMenu();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -233,5 +236,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), "Nothing Added", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_settings)
+        {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

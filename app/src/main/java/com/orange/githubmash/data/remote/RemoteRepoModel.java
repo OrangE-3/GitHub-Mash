@@ -37,6 +37,7 @@ public class RemoteRepoModel implements Parcelable {
         this.mName = in.readString();
         this.mWatchers = in.readInt();
         this.mUrl = in.readString();
+
     }
 
     public RemoteOwner getOwner() {
