@@ -1,9 +1,13 @@
 package com.orange.githubmash;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.animation.OvershootInterpolator;
@@ -24,7 +28,9 @@ import com.orange.githubmash.ui.home.MyRepoViewModel;
 import com.orange.githubmash.ui.repsearch.SearchRepositories;
 import com.orange.githubmash.ui.usersearch.SearchUsres;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_settings,R.id.logout)
+                R.id.nav_home, R.id.logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -100,6 +106,34 @@ public class MainActivity extends AppCompatActivity {
         String hh = mPreferences.getString("USER_URL", null);
         g.setText(gg);
         h.setText(hh);
+        final Context context=this;
+        final Activity activity=this;
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                new AlertDialog.Builder(context)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Logout?")
+                        .setMessage("Are you sure you want to Logout?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                                preferencesEditor.putString("TOKEN_NAME", "");
+                                preferencesEditor.putString("TOKEN_TYPE", "");
+                                preferencesEditor.apply();
+                                startActivity(new Intent(activity, Login.class));
+                                activity.finish();
+                            }
+
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+                return false;
+            }
+        });
     }
 
 
