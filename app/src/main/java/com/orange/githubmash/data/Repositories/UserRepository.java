@@ -87,6 +87,8 @@ public class UserRepository {
                     UserRepository.this.myself.postValue(p);
                     Editor preferencesEditor = UserRepository.this.mPreferences.edit();
                     preferencesEditor.putString("USER_NAME", p.getLogin());
+                    preferencesEditor.putString("USER_URL", p.getHtmlUrl());
+                    preferencesEditor.putString("USER_AVATAR", p.getAvatarUrl());
                     preferencesEditor.apply();
                 }
             }

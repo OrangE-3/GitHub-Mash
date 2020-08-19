@@ -3,6 +3,7 @@ package com.orange.githubmash;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.animation.OvershootInterpolator;
@@ -74,21 +75,33 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         this.favUsersViewModel = ViewModelProviders.of(this).get(FavUsersViewModel.class);
         this.favRepoViewModel = ViewModelProviders.of(this).get(FavRepoViewModel.class);
-
+        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        this.mPreferences = sharedPreferences;
         mViewModel= ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mViewModel.getme().observe(this, new Observer<RemoteOwner>() {
             @Override
             public void onChanged(RemoteOwner remoteOwner)
             {
-                if(remoteOwner!=null) {
-                    TextView g = findViewById(R.id.My_Name);
-                    TextView h = findViewById(R.id.My_url);
-                    g.setText(remoteOwner.getLogin());
-                    h.setText(remoteOwner.getHtmlUrl());
+                TextView g = findViewById(R.id.My_Name);
+                TextView h = findViewById(R.id.My_url);
+                String gg = mPreferences.getString("USER_NAME", null);
+                String hh = mPreferences.getString("USER_URL", null);
+                if(g!=null && h!=null) {
+                    g.setText(gg);
+                    h.setText(hh);
                 }
             }
         });
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView g = (TextView) headerView.findViewById(R.id.My_Name);
+        TextView h = (TextView) headerView.findViewById(R.id.My_url);
+        String gg = mPreferences.getString("USER_NAME", null);
+        String hh = mPreferences.getString("USER_URL", null);
+        g.setText(gg);
+        h.setText(hh);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,15 +184,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        this.mPreferences = sharedPreferences;
-        String entry_owner = sharedPreferences.getString("USER_NAME", "");
+
+        String entry_owner = mPreferences.getString("USER_NAME", "");
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
             this.favUsersViewModel.insert(new User(entry_owner, data.getStringExtra(SearchUsres.REPL_user), data.getStringExtra(SearchUsres.REPL_url), data.getStringExtra(SearchUsres.REPL_avatar)));
+
+            Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchUsres.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
         } else if (requestCode == NEW_REP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             GitHubRepository gitHubRepository = new GitHubRepository(entry_owner, data.getStringExtra(SearchRepositories.REPL_owner), data.getStringExtra(SearchRepositories.REPL_name), data.getStringExtra(SearchRepositories.REPL_description), data.getStringExtra(SearchRepositories.REPL_url), Integer.valueOf(data.getIntExtra(SearchRepositories.REPL_watchers, 0)));
             this.favRepoViewModel.insert(gitHubRepository);
+
+            Toast.makeText(getApplicationContext(),"Repository named: "+data.getStringExtra(SearchRepositories.REPL_name)+" added!",Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "Nothing Added", Toast.LENGTH_SHORT).show();
         }

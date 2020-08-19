@@ -42,7 +42,6 @@ public class FavRepositoriesFragment extends Fragment {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 String u = adapter.getRepAtPosition(position).getUrl();
                 StringBuilder sb = new StringBuilder();
-                sb.append("https://");
                 sb.append(u);
                 FavRepositoriesFragment.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(sb.toString())));
             }

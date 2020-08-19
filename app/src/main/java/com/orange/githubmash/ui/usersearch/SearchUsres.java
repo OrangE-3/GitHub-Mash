@@ -1,13 +1,18 @@
 package com.orange.githubmash.ui.usersearch;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,11 +20,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.orange.githubmash.ItemClickSupport;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.data.remote.RemoteRepoModel;
+import com.orange.githubmash.ui.home.MyRepoViewModel;
 import com.orange.githubmash.ui.home.RepoListAdapter;
 import com.orange.githubmash.ui.home.UserListAdapter;
 import com.orange.githubmash.ui.repsearch.SearchRepViewModel;
@@ -32,6 +39,7 @@ public class SearchUsres extends AppCompatActivity {
     public static final String REPL_user = "com.orange.githubmash.ui.usersearch.reply.user";
     SearchUsersViewModel searchUsersViewModel;
     EditText text;
+    Toast toast=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +55,8 @@ public class SearchUsres extends AppCompatActivity {
         text=(EditText)findViewById(R.id.usersearchbut);
         searchUsersViewModel= ViewModelProviders.of(this).get(SearchUsersViewModel.class);
         final LifecycleOwner o=this;
-
+        final Context c=this;
+        toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -56,15 +65,23 @@ public class SearchUsres extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String query= charSequence.toString();
-                searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
-                    @Override
-                    public void onChanged(List<RemoteOwner> remoteOwners)
-                    {
-                        adapter.setUsers(remoteOwners);
-                    }
-                });
+                String query = charSequence.toString();
+                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    // fetch data
+                    searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
+                        @Override
+                        public void onChanged(List<RemoteOwner> remoteOwners) {
+                            adapter.setUsers(remoteOwners);
+                        }
+                    });
+                } else {
+                    toast.setText("You must be connected to the internet.");
+                    toast.show();
+                }
             }
+
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -89,5 +106,11 @@ public class SearchUsres extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        toast.cancel();
     }
 }
