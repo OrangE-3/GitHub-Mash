@@ -107,13 +107,11 @@ public class UserRepository {
             public void onResponse(Call<OwnerResponse> call, Response<OwnerResponse> response) {
                 if (response.body() != null) {
                     List<RemoteOwner> p = ((OwnerResponse) response.body()).getItems();
-                    Log.i("fasfa", String.valueOf(p.size()));
                     UserRepository.this.searchresults.postValue(p);
                 }
             }
 
             public void onFailure(Call<OwnerResponse> call, Throwable t) {
-                Log.d("Size", String.valueOf(t));
             }
         });
     }

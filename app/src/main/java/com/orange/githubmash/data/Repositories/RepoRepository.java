@@ -88,17 +88,15 @@ public class RepoRepository {
         sb2.append(tokentype);
         sb2.append(str2);
         sb2.append(token);
-        Log.i("TOKEN", sb2.toString());
         atc.enqueue(new Callback<List<RemoteRepoModel>>() {
 
             public void onResponse(Call<List<RemoteRepoModel>> call, Response<List<RemoteRepoModel>> response) {
                 List<RemoteRepoModel> l = (List) response.body();
                 RepoRepository.this.myreps.postValue(l);
-                Log.d("Size", String.valueOf(l.size()));
+
             }
 
             public void onFailure(Call<List<RemoteRepoModel>> call, Throwable t) {
-                Log.d("Size", String.valueOf(t));
             }
         });
     }
@@ -113,7 +111,6 @@ public class RepoRepository {
             }
 
             public void onFailure(Call<RepositoryResponse> call, Throwable t) {
-                Log.d("Size", String.valueOf(t));
             }
         });
     }
