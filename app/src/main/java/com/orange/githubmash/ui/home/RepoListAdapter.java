@@ -76,9 +76,9 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
         if (list != null) {
             RemoteRepoModel current = (RemoteRepoModel) list.get(position);
             holder.repoName.setText(current.getmName());
-            holder.repoOwner.setText(current.getOwner().getLogin());
-            holder.repoDescription.setText(current.getmDescription());
-            holder.repoWatchers.setText(String.valueOf(current.getmWatchers()));
+            holder.repoOwner.setText("Owner: "+current.getOwner().getLogin());
+            holder.repoDescription.setText("Description: "+current.getmDescription());
+            holder.repoWatchers.setText("Number of Watchers: "+String.valueOf(current.getmWatchers()));
 
             if(!show_owner)
             {
