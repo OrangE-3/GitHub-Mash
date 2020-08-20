@@ -38,7 +38,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
             RemoteOwner current = mOwners.get(position);
             holder.userName.setText(current.getLogin());
             holder.url.setText(current.getHtmlUrl());
-            Picasso.get().load(current.getAvatarUrl()).resize(200,200).into(holder.avatarurl);
+            Picasso.get().load(current.getAvatarUrl()).resize(250,250).into(holder.avatarurl);
         } else {
             // Covers the case of data not being ready yet.
             holder.userName.setText("NA");

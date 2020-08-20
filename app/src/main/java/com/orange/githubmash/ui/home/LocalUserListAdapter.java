@@ -61,7 +61,7 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
             holder.userName.setText(current.getLogin());
             holder.url.setText(current.getUrl());
             holder.avatarurl.setContentDescription(current.getAvatar_url());
-            Picasso.get().load(current.getAvatar_url()).resize(150,150).into(holder.avatarurl);
+            Picasso.get().load(current.getAvatar_url()).resize(200,200).into(holder.avatarurl);
 
             if(!show_url)
             {
