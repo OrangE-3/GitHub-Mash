@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "117614757627",
+    "firebase_url": "https://github-mash.firebaseio.com",
+    "project_id": "github-mash",
+    "storage_bucket": "github-mash.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117614757627:android:e86034484cbacab110125e",
+        "android_client_info": {
+          "package_name": "com.orange.githubmash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "117614757627-39v6263tg3i967n48ft5315pt07kv61b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orange.githubmash",
+            "certificate_hash": "a0aad8bc6848cc84953fbf5ce5c613825c5826af"
+          }
+        },
+        {
+          "client_id": "117614757627-jhe951ta8pg4dtjin46bkr2np65u9bf9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqaNhPR7-NJKKYFjirSiRkKkP56176znU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "117614757627-jhe951ta8pg4dtjin46bkr2np65u9bf9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
