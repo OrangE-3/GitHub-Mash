@@ -3,12 +3,12 @@
     android:opacity="opaque">
 
     <!--Background color of your Splash Screen-->
-    <item android:drawable="@android:color/background_dark" />
+    <item android:drawable="@color/grey_900" />
 
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_applogo_round" />
     </item>
 
 </layer-list>

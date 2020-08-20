@@ -62,9 +62,9 @@ public class LocalRepoListAdapter extends Adapter<LocalRepoListAdapter.LocalRepo
         if (list != null) {
             GitHubRepository current = (GitHubRepository) list.get(position);
             holder.repoName.setText(current.getName());
-            holder.repoOwner.setText(current.getOwner());
-            holder.repoDescription.setText(current.getDescription());
-            holder.repoWatchers.setText(String.valueOf(current.getWatchers()));
+            holder.repoOwner.setText("Owner: "+current.getOwner());
+            holder.repoDescription.setText("Description: "+current.getDescription());
+            holder.repoWatchers.setText("Number of Watchers: "+String.valueOf(current.getWatchers()));
 
             if(!show_owner)
             {

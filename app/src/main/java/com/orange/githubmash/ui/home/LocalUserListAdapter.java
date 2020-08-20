@@ -2,9 +2,11 @@ package com.orange.githubmash.ui.home;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.local.User;
 import com.orange.githubmash.ui.settings.Settings;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
     /* renamed from: com.orange.githubmash.ui.home.LocalUserListAdapter$UserViewHolder */
     class UserViewHolder extends ViewHolder {
         /* access modifiers changed from: private */
-        public final TextView avatarurl;
+        public final ImageView avatarurl;
         /* access modifiers changed from: private */
         public final TextView url;
         /* access modifiers changed from: private */
@@ -36,7 +39,7 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
             super(itemView);
             this.userName = (TextView) itemView.findViewById(R.id.login_text);
             this.url = (TextView) itemView.findViewById(R.id.url_text);
-            this.avatarurl = (TextView) itemView.findViewById(R.id.avatar_url);
+            this.avatarurl = (ImageView) itemView.findViewById(R.id.avatar_url);
         }
     }
 
@@ -57,7 +60,8 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
             User current = (User) list.get(position);
             holder.userName.setText(current.getLogin());
             holder.url.setText(current.getUrl());
-            holder.avatarurl.setText(current.getAvatar_url());
+            holder.avatarurl.setContentDescription(current.getAvatar_url());
+            Picasso.get().load(current.getAvatar_url()).resize(150,150).into(holder.avatarurl);
 
             if(!show_url)
             {
@@ -72,7 +76,7 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
         String str = "NA";
         holder.userName.setText(str);
         holder.url.setText(str);
-        holder.avatarurl.setText(str);
+        holder.avatarurl.setContentDescription(str);
     }
 
     public User getUserAtPosition(int position) {
