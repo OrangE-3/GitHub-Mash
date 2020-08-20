@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.data.remote.RemoteOwner;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -35,12 +38,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
             RemoteOwner current = mOwners.get(position);
             holder.userName.setText(current.getLogin());
             holder.url.setText(current.getHtmlUrl());
-            holder.avatarurl.setText(current.getAvatarUrl());
+            Picasso.get().load(current.getAvatarUrl()).resize(200,200).into(holder.avatarurl);
         } else {
             // Covers the case of data not being ready yet.
             holder.userName.setText("NA");
             holder.url.setText("NA");
-            holder.avatarurl.setText("NA");
+            holder.avatarurl.setContentDescription("NA");
         }
     }
 
@@ -65,7 +68,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
     class UserViewHolder extends RecyclerView.ViewHolder {
         private final TextView userName;
         private final TextView url;
-        private final TextView avatarurl;
+        private final ImageView avatarurl;
 
 
         private UserViewHolder(View itemView) {

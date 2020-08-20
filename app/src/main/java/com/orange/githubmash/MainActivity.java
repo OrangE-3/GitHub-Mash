@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.orange.githubmash.ui.home.MyRepoViewModel;
 import com.orange.githubmash.ui.repsearch.SearchRepositories;
 import com.orange.githubmash.ui.settings.Settings;
 import com.orange.githubmash.ui.usersearch.SearchUsres;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -105,10 +107,12 @@ public class MainActivity extends AppCompatActivity {
         View headerView = navigationView.getHeaderView(0);
         TextView g = (TextView) headerView.findViewById(R.id.My_Name);
         TextView h = (TextView) headerView.findViewById(R.id.My_url);
+        ImageView v=headerView.findViewById(R.id.My_Avatar);
         String gg = mPreferences.getString("USER_NAME", null);
         String hh = mPreferences.getString("USER_URL", null);
         g.setText(gg);
         h.setText(hh);
+        Picasso.get().load(mPreferences.getString("USER_AVATAR", null)).resize(120,120).into(v);
         final Context context=this;
         final Activity activity=this;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -226,8 +230,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
             this.favUsersViewModel.insert(new User(entry_owner, data.getStringExtra(SearchUsres.REPL_user), data.getStringExtra(SearchUsres.REPL_url), data.getStringExtra(SearchUsres.REPL_avatar)));
-
-            Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchUsres.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchUsres.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
         } else if (requestCode == NEW_REP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             GitHubRepository gitHubRepository = new GitHubRepository(entry_owner, data.getStringExtra(SearchRepositories.REPL_owner), data.getStringExtra(SearchRepositories.REPL_name), data.getStringExtra(SearchRepositories.REPL_description), data.getStringExtra(SearchRepositories.REPL_url), Integer.valueOf(data.getIntExtra(SearchRepositories.REPL_watchers, 0)));
             this.favRepoViewModel.insert(gitHubRepository);
