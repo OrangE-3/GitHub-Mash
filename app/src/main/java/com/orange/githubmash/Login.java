@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +31,15 @@ public class Login extends AppCompatActivity {
     public static String callback="github-mash://getmycallback";
     private SharedPreferences mPreferences;
     private String sharedPrefFile = "com.example.android.hellosharedprefs";
-
+    private ProgressBar progressBar;
+    private Button Loginbutton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        progressBar=findViewById(R.id.progressBar);
+        Loginbutton = findViewById(R.id.login_button);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -50,8 +55,9 @@ public class Login extends AppCompatActivity {
         {
             String code=uri.getQueryParameter("code");
             if(code!=null) {
-                Button Loginbutton = findViewById(R.id.login_button);
-                Loginbutton.setVisibility(View.GONE);
+
+                Loginbutton.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 Retrofit.Builder builder = new Retrofit.Builder()
                         .baseUrl("https://github.com")
                         .addConverterFactory(GsonConverterFactory.create());
