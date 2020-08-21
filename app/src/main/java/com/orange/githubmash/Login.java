@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orange.githubmash.data.remote.AccessToken;
@@ -47,36 +49,36 @@ public class Login extends AppCompatActivity {
         if(uri!=null && uri.toString().startsWith(callback))
         {
             String code=uri.getQueryParameter("code");
+            if(code!=null) {
+                Button Loginbutton = findViewById(R.id.login_button);
+                Loginbutton.setVisibility(View.GONE);
+                Retrofit.Builder builder = new Retrofit.Builder()
+                        .baseUrl("https://github.com")
+                        .addConverterFactory(GsonConverterFactory.create());
+                Retrofit retrofit = builder.build();
+                GitHubClient client = retrofit.create(GitHubClient.class);
 
+                Call<AccessToken> atc = client.getAccessToken(Login.clientID, Login.clientSecret, code);
 
-            Retrofit.Builder builder = new Retrofit.Builder()
-                    .baseUrl("https://github.com")
-                    .addConverterFactory(GsonConverterFactory.create());
-            Retrofit retrofit=builder.build();
-            GitHubClient client=retrofit.create(GitHubClient.class);
+                atc.enqueue(new Callback<AccessToken>() {
+                    @Override
+                    public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                        AccessToken token = response.body();
+                        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+                        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                        preferencesEditor.putString("TOKEN_NAME", token.getAccesstoken());
+                        preferencesEditor.putString("TOKEN_TYPE", token.getTokentype());
+                        preferencesEditor.apply();
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
-            Call<AccessToken> atc= client.getAccessToken(Login.clientID,Login.clientSecret,code);
-
-            atc.enqueue(new Callback<AccessToken>() {
-                @Override
-                public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                    AccessToken token=response.body();
-                    mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-                    SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-                    preferencesEditor.putString("TOKEN_NAME", token.getAccesstoken());
-                    preferencesEditor.putString("TOKEN_TYPE", token.getTokentype());
-                    preferencesEditor.apply();
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-                @Override
-                public void onFailure(Call<AccessToken> call, Throwable t) {
-                }
-            });
-
-
+                    @Override
+                    public void onFailure(Call<AccessToken> call, Throwable t) {
+                    }
+                });
+            }
         }
     }
 }

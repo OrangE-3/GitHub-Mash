@@ -30,7 +30,6 @@ public class RemoteToLocalRepository
     public GitHubRepository LocalRep (RemoteRepoModel remote)
     {
         String entry_owner = mPreferences.getString("USER_NAME", "")+"#@local";
-        Log.i("fasgfa",entry_owner);
         GitHubRepository g=new GitHubRepository(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
         return g;
     }
