@@ -6,17 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.repsearch.SearchRepositories">
 
-    <EditText
+    <SearchView
         android:id="@+id/repsearchbut"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Search for Repositories"
-        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        android:queryHint="Search Repositories"
+        android:iconifiedByDefault="false"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/repsearchrec"
@@ -27,6 +26,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/repsearchbut"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/myrepitem" />/>
+        tools:listitem="@layout/myrepitem" /><![CDATA[
+
+    />
+]]>
 </androidx.constraintlayout.widget.ConstraintLayout>

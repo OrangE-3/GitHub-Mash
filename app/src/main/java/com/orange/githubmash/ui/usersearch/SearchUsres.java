@@ -21,6 +21,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.orange.githubmash.ItemClickSupport;
@@ -39,7 +40,7 @@ public class SearchUsres extends AppCompatActivity {
     public static final String REPL_url = "com.orange.githubmash.ui.usersearch.reply.url";
     public static final String REPL_user = "com.orange.githubmash.ui.usersearch.reply.user";
     SearchUsersViewModel searchUsersViewModel;
-    EditText text;
+    SearchView textv;
     Toast toast=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,55 +54,38 @@ public class SearchUsres extends AppCompatActivity {
 
 
 
-        text=(EditText)findViewById(R.id.usersearchbut);
+        textv=(SearchView) findViewById(R.id.usersearchbut);
         searchUsersViewModel= ViewModelProviders.of(this).get(SearchUsersViewModel.class);
         final LifecycleOwner o=this;
         final Context c=this;
         toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-        text.addTextChangedListener(new TextWatcher() {
-            CountDownTimer timer = null;
+        textv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-
-            @Override
-            public void afterTextChanged(final Editable editable) {
-                if (timer != null) {
-                    timer.cancel();
-                }
-                timer = new CountDownTimer(300, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    public void onFinish() {
-                        String query = editable.toString();
-                        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-                        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                        if (networkInfo != null && networkInfo.isConnected()) {
-                            // fetch data
-                            searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
-                                @Override
-                                public void onChanged(List<RemoteOwner> remoteOwners) {
-                                    adapter.setUsers(remoteOwners);
-                                }
-                            });
-                        } else {
-                            toast.setText("You must be connected to the internet.");
-                            toast.show();
+            public boolean onQueryTextSubmit(String query) {
+                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    // fetch data
+                    searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
+                        @Override
+                        public void onChanged(List<RemoteOwner> remoteOwners) {
+                            adapter.setUsers(remoteOwners);
                         }
-                    }
+                    });
+                } else {
+                    toast.setText("You must be connected to the internet.");
+                    toast.show();
+                }
+                return false;
+            }
 
-                }.start();
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
             }
         });
+
+
 
         ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {

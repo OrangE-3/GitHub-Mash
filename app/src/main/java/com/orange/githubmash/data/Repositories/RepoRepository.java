@@ -119,6 +119,8 @@ public class RepoRepository {
     }
 
     private void searchreps(String query) {
+        String b=query+" in:name";
+        query=b;
         ((GitHubClient) new Builder().baseUrl("https://api.github.com").addConverterFactory(GsonConverterFactory.create()).build().create(GitHubClient.class)).getrepList(query).enqueue(new Callback<RepositoryResponse>() {
 
             public void onResponse(Call<RepositoryResponse> call, Response<RepositoryResponse> response) {
