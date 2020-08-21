@@ -17,7 +17,7 @@ public class RepoTabsPagerAdapter extends FragmentStatePagerAdapter
     @Override
     public Fragment getItem(int position) {
 
-        if(position==0)return new MyRepositoriesFragment();
+       if(position==0)return new MyRepositoriesFragment();
         if(position==1)return new FavRepositoriesFragment();
         if(position==2)return new FavUsersFragment();
 

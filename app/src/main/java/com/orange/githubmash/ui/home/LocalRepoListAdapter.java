@@ -8,32 +8,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import androidx.recyclerview.widget.RecyclerView;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.local.GitHubRepository;
 import com.orange.githubmash.ui.settings.Settings;
 
 import java.util.List;
-
-/* renamed from: com.orange.githubmash.ui.home.LocalRepoListAdapter */
-public class LocalRepoListAdapter extends Adapter<LocalRepoListAdapter.LocalRepoViewHolder> {
+public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdapter.LocalRepoViewHolder> {
     private final LayoutInflater mInflater;
     private List<GitHubRepository> mRepos;
     private SharedPreferences appsettings;
     private Boolean show_owner ;
     private Boolean show_descr ;
     private Boolean show_watchers;
-    /* renamed from: com.orange.githubmash.ui.home.LocalRepoListAdapter$LocalRepoViewHolder */
-    class LocalRepoViewHolder extends ViewHolder {
-        /* access modifiers changed from: private */
-        public final TextView repoDescription;
-        /* access modifiers changed from: private */
-        public final TextView repoName;
-        /* access modifiers changed from: private */
-        public final TextView repoOwner;
-        /* access modifiers changed from: private */
-        public final TextView repoWatchers;
+     class LocalRepoViewHolder extends RecyclerView.ViewHolder {
+        private final TextView repoDescription;
+        private final TextView repoName;
+        private final TextView repoOwner;
+        private final TextView repoWatchers;
 
         private LocalRepoViewHolder(View itemView) {
             super(itemView);
@@ -58,9 +50,8 @@ public class LocalRepoListAdapter extends Adapter<LocalRepoListAdapter.LocalRepo
     }
 
     public void onBindViewHolder(LocalRepoViewHolder holder, int position) {
-        List<GitHubRepository> list = this.mRepos;
-        if (list != null) {
-            GitHubRepository current = (GitHubRepository) list.get(position);
+        if (mRepos != null) {
+            GitHubRepository current = (GitHubRepository) mRepos.get(position);
             holder.repoName.setText(current.getName());
             holder.repoOwner.setText("Owner: "+current.getOwner());
             holder.repoDescription.setText("Description: "+current.getDescription());

@@ -50,8 +50,6 @@ public class SearchRepositories extends AppCompatActivity {
         final RepoListAdapter adapter = new RepoListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
         textv= (SearchView) findViewById(R.id.repsearchbut);
         searchRepViewModel= ViewModelProviders.of(this).get(SearchRepViewModel.class);
         final LifecycleOwner o=this;
@@ -94,8 +92,8 @@ public class SearchRepositories extends AppCompatActivity {
                 replyintent.putExtra(SearchRepositories.REPL_description, rep.getmDescription());
                 replyintent.putExtra(SearchRepositories.REPL_url, rep.getmUrl());
                 replyintent.putExtra(SearchRepositories.REPL_watchers, rep.getmWatchers());
-                SearchRepositories.this.setResult(-1, replyintent);
-                SearchRepositories.this.finish();
+                setResult(RESULT_OK, replyintent);
+                finish();
                 return false;
             }
         }).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {

@@ -21,7 +21,7 @@ import java.util.List;
 /* renamed from: com.orange.githubmash.ui.home.FavUsersFragment */
 public class FavUsersFragment extends Fragment {
     /* access modifiers changed from: private */
-    public FavUsersViewModel favUserViewModel;
+    public static FavUsersViewModel favUserViewModel;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.favUserViewModel = (FavUsersViewModel) ViewModelProviders.of((Fragment) this).get(FavUsersViewModel.class);

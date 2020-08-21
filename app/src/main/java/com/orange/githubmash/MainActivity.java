@@ -23,6 +23,7 @@ import com.orange.githubmash.data.remote.AccessToken;
 import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.ui.home.FavRepoViewModel;
+import com.orange.githubmash.ui.home.FavRepositoriesFragment;
 import com.orange.githubmash.ui.home.FavUsersFragment;
 import com.orange.githubmash.ui.home.FavUsersViewModel;
 import com.orange.githubmash.ui.home.MyRepoViewModel;
@@ -61,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Boolean isMenuOpen = false;
     public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 1;
     public static final int NEW_REP_ACTIVITY_REQUEST_CODE = 2;
-    private String sharedPrefFile = "com.example.android.hellosharedprefs";
-    private FavRepoViewModel favRepoViewModel;
-    private FavUsersViewModel favUsersViewModel;
+    public static final String sharedPrefFile = "com.example.android.hellosharedprefs";
     private SharedPreferences mPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        this.favUsersViewModel = ViewModelProviders.of(this).get(FavUsersViewModel.class);
-        this.favRepoViewModel = ViewModelProviders.of(this).get(FavRepoViewModel.class);
         SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         this.mPreferences = sharedPreferences;
         mViewModel= ViewModelProviders.of(this).get(MainActivityViewModel.class);
@@ -103,7 +100,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        if(mPreferences.getString("USER_NAME",null)==null) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         View headerView = navigationView.getHeaderView(0);
         TextView g = (TextView) headerView.findViewById(R.id.My_Name);
         TextView h = (TextView) headerView.findViewById(R.id.My_url);
@@ -118,29 +121,30 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                new AlertDialog.Builder(context)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Logout?")
-                        .setMessage("Are you sure you want to Logout?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-                                preferencesEditor.putString("TOKEN_NAME", "");
-                                preferencesEditor.putString("TOKEN_TYPE", "");
-                                preferencesEditor.apply();
-                                startActivity(new Intent(activity, Login.class));
-                                activity.finish();
-                            }
+                if(item.getTitle().equals("Logout")) {
+                    new AlertDialog.Builder(context)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Logout?")
+                            .setMessage("Are you sure you want to Logout?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                                    preferencesEditor.putString("TOKEN_NAME", "");
+                                    preferencesEditor.putString("TOKEN_TYPE", "");
+                                    preferencesEditor.apply();
+                                    startActivity(new Intent(activity, Login.class));
+                                    activity.finish();
+                                }
 
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
                 return false;
             }
         });
+
     }
 
 
@@ -229,12 +233,11 @@ public class MainActivity extends AppCompatActivity {
         String entry_owner = mPreferences.getString("USER_NAME", "");
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            this.favUsersViewModel.insert(new User(entry_owner, data.getStringExtra(SearchUsres.REPL_user), data.getStringExtra(SearchUsres.REPL_url), data.getStringExtra(SearchUsres.REPL_avatar)));
+            FavUsersFragment.favUserViewModel.insert(new User(entry_owner, data.getStringExtra(SearchUsres.REPL_user), data.getStringExtra(SearchUsres.REPL_url), data.getStringExtra(SearchUsres.REPL_avatar)));
                 Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchUsres.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
         } else if (requestCode == NEW_REP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            GitHubRepository gitHubRepository = new GitHubRepository(entry_owner, data.getStringExtra(SearchRepositories.REPL_owner), data.getStringExtra(SearchRepositories.REPL_name), data.getStringExtra(SearchRepositories.REPL_description), data.getStringExtra(SearchRepositories.REPL_url), Integer.valueOf(data.getIntExtra(SearchRepositories.REPL_watchers, 0)));
-            this.favRepoViewModel.insert(gitHubRepository);
-
+            GitHubRepository gitHubRepository = new GitHubRepository(entry_owner, data.getStringExtra(SearchRepositories.REPL_owner), data.getStringExtra(SearchRepositories.REPL_name), data.getStringExtra(SearchRepositories.REPL_description), data.getStringExtra(SearchRepositories.REPL_url), data.getIntExtra(SearchRepositories.REPL_watchers, 0));
+            FavRepositoriesFragment.favRepoViewModel.insert(gitHubRepository);
             Toast.makeText(getApplicationContext(),"Repository named: "+data.getStringExtra(SearchRepositories.REPL_name)+" added!",Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "Nothing Added", Toast.LENGTH_SHORT).show();

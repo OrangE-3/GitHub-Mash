@@ -52,28 +52,4 @@ public class GitHubRepository {
     }
 
 
-    public void setEntry_owner(String entry_owner2) {
-        this.entry_owner = entry_owner2;
-    }
-
-    public void setOwner(String owner2) {
-        this.owner = owner2;
-    }
-
-    public void setName(String name2) {
-        this.name = name2;
-    }
-
-    public void setUrl(String url2) {
-        this.url = url2;
-    }
-
-    public void setDescription(String description2) {
-        this.description = description2;
-    }
-
-    public void setWatchers(Integer watchers2) {
-        this.watchers = watchers2;
-    }
-
 }

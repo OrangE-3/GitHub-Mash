@@ -1,26 +1,23 @@
 package com.orange.githubmash.data.Repositories;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
-import com.orange.githubmash.data.Converters.RemoteToLocalRepository;
+
 import com.orange.githubmash.data.local.GitHubRepository;
 import com.orange.githubmash.data.local.LocalDatabase;
 import com.orange.githubmash.data.local.RepoDao;
 import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.RemoteRepoModel;
 import com.orange.githubmash.data.remote.RepositoryResponse;
+
+
 import java.util.List;
-import java.util.Observable;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,11 +29,11 @@ public class RepoRepository {
     private LiveData<List<GitHubRepository> > favreps;
     private SharedPreferences mPreferences;
     /* access modifiers changed from: private */
-    public MutableLiveData<List<RemoteRepoModel> > myreps = new MutableLiveData<>(null);
-    public LiveData<List<GitHubRepository> > myrepslocal;
+    private MutableLiveData<List<RemoteRepoModel> > myreps = new MutableLiveData<>(null);
+    private LiveData<List<GitHubRepository> > myrepslocal;
     private RepoDao repoDao;
     /* access modifiers changed from: private */
-    public MutableLiveData<List<RemoteRepoModel>> searchresults = new MutableLiveData<>(null);
+    private MutableLiveData<List<RemoteRepoModel> > searchresults = new MutableLiveData<>(null);
     private String sharedPrefFile = "com.example.android.hellosharedprefs";
     Context context;
     public LiveData<List<RemoteRepoModel> >getMyRepsremote()
@@ -53,12 +50,12 @@ public class RepoRepository {
         private RepoDao mTaskDao;
 
         deletetask(RepoDao dao) {
-            this.mTaskDao = dao;
+            mTaskDao = dao;
         }
 
         /* access modifiers changed from: protected */
-        public Void doInBackground(GitHubRepository... reps) {
-            this.mTaskDao.deleterep(reps[0]);
+        protected Void doInBackground(GitHubRepository... reps) {
+            mTaskDao.deleterep(reps[0]);
             return null;
         }
     }
@@ -67,12 +64,12 @@ public class RepoRepository {
         private RepoDao mTaskDao;
 
         inserttask(RepoDao dao) {
-            this.mTaskDao = dao;
+            mTaskDao = dao;
         }
 
         /* access modifiers changed from: protected */
-        public Void doInBackground(GitHubRepository... gitHubRepositories) {
-            this.mTaskDao.insert(gitHubRepositories[0]);
+        protected Void doInBackground(GitHubRepository... gitHubRepositories) {
+            mTaskDao.insert(gitHubRepositories[0]);
             return null;
         }
     }
@@ -80,37 +77,31 @@ public class RepoRepository {
     public RepoRepository(Application application)
     {
         context=application;
-        SharedPreferences sharedPreferences = application.getSharedPreferences(this.sharedPrefFile, 0);
+        SharedPreferences sharedPreferences = application.getSharedPreferences(this.sharedPrefFile,Context.MODE_PRIVATE);
         this.mPreferences = sharedPreferences;
         String entry_owner = sharedPreferences.getString("USER_NAME", "");
-        RepoDao repoDao2 = LocalDatabase.getDatabase(application).repoDao();
-        this.repoDao = repoDao2;
-        this.favreps = repoDao2.getmyReps(entry_owner);
-        this.myrepslocal=repoDao2.getmyReps(entry_owner+"#@local");
+        LocalDatabase db = LocalDatabase.getDatabase(application);
+        repoDao =db.repoDao();
+        this.favreps = repoDao.getmyReps(entry_owner);
+        this.myrepslocal=repoDao.getmyReps(entry_owner+"#@local");
     }
 
     private void Myrepshelper(final Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(this.sharedPrefFile, 0);
         this.mPreferences = sharedPreferences;
-        String str = "";
-        String token = sharedPreferences.getString("TOKEN_NAME", str);
-        String tokentype = this.mPreferences.getString("TOKEN_TYPE", str);
-        GitHubClient client = (GitHubClient) new Builder().baseUrl("https://api.github.com").addConverterFactory(GsonConverterFactory.create()).build().create(GitHubClient.class);
-        StringBuilder sb = new StringBuilder();
-        sb.append(tokentype);
-        String str2 = " ";
-        sb.append(str2);
-        sb.append(token);
-        Call<List<RemoteRepoModel>> atc = client.userreps(sb.toString());
-        StringBuilder sb2 = new StringBuilder();
-        sb2.append(tokentype);
-        sb2.append(str2);
-        sb2.append(token);
+        String token = sharedPreferences.getString("TOKEN_NAME", "");
+        String tokentype = this.mPreferences.getString("TOKEN_TYPE", "");
+        GitHubClient client = (GitHubClient) new Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(GitHubClient.class);
+        Call<List<RemoteRepoModel>> atc = client.userreps(tokentype+" "+token);
         atc.enqueue(new Callback<List<RemoteRepoModel>>() {
 
             public void onResponse(Call<List<RemoteRepoModel>> call, Response<List<RemoteRepoModel>> response) {
-                List<RemoteRepoModel> l = (List) response.body();
-                RepoRepository.this.myreps.postValue(l);
+                List<RemoteRepoModel> l = response.body();
+                myreps.postValue(l);
             }
 
             public void onFailure(Call<List<RemoteRepoModel>> call, Throwable t) {
@@ -144,10 +135,10 @@ public class RepoRepository {
     }
 
     public void insert(GitHubRepository repository) {
-        new inserttask(this.repoDao).execute(new GitHubRepository[]{repository});
+        new inserttask(this.repoDao).execute(repository);
     }
 
     public void delete(GitHubRepository rep) {
-        new deletetask(this.repoDao).execute(new GitHubRepository[]{rep});
+        new deletetask(this.repoDao).execute(rep);
     }
 }

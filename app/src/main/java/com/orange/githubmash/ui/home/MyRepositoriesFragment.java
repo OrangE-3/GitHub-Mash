@@ -43,9 +43,6 @@ public class MyRepositoriesFragment extends Fragment
 {
     SwipeRefreshLayout mSwipeRefreshLayout;
     private MyRepoViewModel mRepoViewModel;
-    public MyRepositoriesFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +79,7 @@ public class MyRepositoriesFragment extends Fragment
         mRepoViewModel = ViewModelProviders.of(this).get(MyRepoViewModel.class);
         mRepoViewModel.getMyReposfromlocal().observe(getViewLifecycleOwner(), new Observer<List<GitHubRepository> >() {
             @Override
-            public void onChanged(@Nullable final List<GitHubRepository>reps) {
+            public void onChanged(List<GitHubRepository>reps) {
                 localadapter.setReps(reps);
             }
         });
