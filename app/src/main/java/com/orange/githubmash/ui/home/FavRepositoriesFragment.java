@@ -40,7 +40,7 @@ public class FavRepositoriesFragment extends Fragment {
         favRepoViewModel = (FavRepoViewModel) ViewModelProviders.of(this).get(FavRepoViewModel.class);
         View root = inflater.inflate(R.layout.fragment_fav_repos, container, false);
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.favreprec);
-        adapter = new LocalRepoListAdapter(getActivity());
+        adapter = new LocalRepoListAdapter(getActivity(),this.getClass());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         favRepoViewModel.getMyRepos().observe(getViewLifecycleOwner(), new Observer<List<GitHubRepository>>() {

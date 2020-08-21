@@ -24,9 +24,6 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
     private final LayoutInflater mInflater;
     private List<RemoteRepoModel> mRepos;
     private SharedPreferences appsettings;
-    private Boolean show_owner ;
-    private Boolean show_descr ;
-    private Boolean show_watchers;
     public Integer iscreated=0;
     /* renamed from: com.orange.githubmash.ui.home.RepoListAdapter$RepoViewHolder */
     class RepoViewHolder extends ViewHolder {
@@ -52,21 +49,6 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
         iscreated=1;
         this.mInflater = LayoutInflater.from(context);
         appsettings= PreferenceManager.getDefaultSharedPreferences(context);
-        if(context.getClass()== MainActivity.class) {
-            show_owner = appsettings.getBoolean(Settings.me_owner,false);
-            show_descr = appsettings.getBoolean(Settings.me_descr, false);
-            show_watchers = appsettings.getBoolean(Settings.me_watchers, false);
-        }
-
-        else
-        {
-            show_owner = true;
-            show_descr = true;
-            show_watchers = true;
-
-        }
-
-
     }
 
     public RepoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -81,19 +63,6 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
             holder.repoOwner.setText("Owner: "+current.getOwner().getLogin());
             holder.repoDescription.setText("Description: "+current.getmDescription());
             holder.repoWatchers.setText("Number of Watchers: "+String.valueOf(current.getmWatchers()));
-
-            if(!show_owner)
-            {
-                holder.repoOwner.setVisibility(View.GONE);
-            }
-            if(!show_descr)
-            {
-                holder.repoDescription.setVisibility(View.GONE);
-            }
-            if(!show_watchers)
-            {
-                holder.repoWatchers.setVisibility(View.GONE);
-            }
             return;
         }
         String str = "NA";

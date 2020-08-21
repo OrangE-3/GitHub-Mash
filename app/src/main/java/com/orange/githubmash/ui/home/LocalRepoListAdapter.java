@@ -18,8 +18,8 @@ public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdap
     private final LayoutInflater mInflater;
     private List<GitHubRepository> mRepos;
     private SharedPreferences appsettings;
-    private Boolean show_owner ;
-    private Boolean show_descr ;
+    private Boolean show_owner;
+    private Boolean show_descr;
     private Boolean show_watchers;
      class LocalRepoViewHolder extends RecyclerView.ViewHolder {
         private final TextView repoDescription;
@@ -36,12 +36,20 @@ public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdap
         }
     }
 
-    public LocalRepoListAdapter(Context context) {
+    public LocalRepoListAdapter(Context context,Class clas) {
         this.mInflater = LayoutInflater.from(context);
         appsettings= PreferenceManager.getDefaultSharedPreferences(context);
-        show_owner = appsettings.getBoolean(Settings.fav_owner,false);
-        show_descr = appsettings.getBoolean(Settings.fav_descr, false);
-        show_watchers = appsettings.getBoolean(Settings.fav_watchers, false);
+
+        if(clas==FavRepositoriesFragment.class) {
+            show_owner = appsettings.getBoolean(Settings.fav_owner, false);
+            show_descr = appsettings.getBoolean(Settings.fav_descr, false);
+            show_watchers = appsettings.getBoolean(Settings.fav_watchers, false);
+        }
+        else {
+            show_owner = appsettings.getBoolean(Settings.me_owner, false);
+            show_descr = appsettings.getBoolean(Settings.me_descr, false);
+            show_watchers = appsettings.getBoolean(Settings.me_watchers, false);
+        }
 
     }
 

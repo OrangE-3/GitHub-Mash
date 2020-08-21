@@ -54,7 +54,7 @@ public class MyRepositoriesFragment extends Fragment
 
         final RecyclerView recyclerView = root.findViewById(R.id.myrepolist);
         //final RepoListAdapter adapter = new RepoListAdapter(getActivity());
-        final LocalRepoListAdapter localadapter = new LocalRepoListAdapter(getActivity());
+        final LocalRepoListAdapter localadapter = new LocalRepoListAdapter(getActivity(),this.getClass());
         recyclerView.setAdapter(localadapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
