@@ -28,11 +28,12 @@ public class FavRepositoriesFragment extends Fragment {
         final LocalRepoListAdapter adapter = new LocalRepoListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        this.favRepoViewModel.getMyRepos().observe(getViewLifecycleOwner(), new Observer<List<GitHubRepository>>() {
-            public void onChanged(List<GitHubRepository> reps) {
-                adapter.setReps(reps);
-            }
-        });
+            this.favRepoViewModel.getMyRepos().observe(getViewLifecycleOwner(), new Observer<List<GitHubRepository>>() {
+                public void onChanged(List<GitHubRepository> reps) {
+                        adapter.setReps(reps);
+                }
+            });
+
         ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new OnItemLongClickListener() {
             public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
                 FavRepositoriesFragment.this.favRepoViewModel.delete(adapter.getRepAtPosition(position));

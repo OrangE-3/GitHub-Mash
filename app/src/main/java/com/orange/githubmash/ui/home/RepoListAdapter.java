@@ -27,6 +27,7 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
     private Boolean show_owner ;
     private Boolean show_descr ;
     private Boolean show_watchers;
+    public Integer iscreated=0;
     /* renamed from: com.orange.githubmash.ui.home.RepoListAdapter$RepoViewHolder */
     class RepoViewHolder extends ViewHolder {
         /* access modifiers changed from: private */
@@ -48,6 +49,7 @@ public class RepoListAdapter extends Adapter<RepoListAdapter.RepoViewHolder> {
     }
 
     public RepoListAdapter(Context context) {
+        iscreated=1;
         this.mInflater = LayoutInflater.from(context);
         appsettings= PreferenceManager.getDefaultSharedPreferences(context);
         if(context.getClass()== MainActivity.class) {

@@ -1,11 +1,18 @@
 package com.orange.githubmash.data.Repositories;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
+import com.orange.githubmash.data.Converters.RemoteToLocalRepository;
 import com.orange.githubmash.data.local.GitHubRepository;
 import com.orange.githubmash.data.local.LocalDatabase;
 import com.orange.githubmash.data.local.RepoDao;
@@ -13,6 +20,8 @@ import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.RemoteRepoModel;
 import com.orange.githubmash.data.remote.RepositoryResponse;
 import java.util.List;
+import java.util.Observable;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,14 +29,25 @@ import retrofit2.Retrofit.Builder;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RepoRepository {
-    private LiveData<List<GitHubRepository>> favreps;
+    private LiveData<List<GitHubRepository> > favreps;
     private SharedPreferences mPreferences;
     /* access modifiers changed from: private */
-    public MutableLiveData<List<RemoteRepoModel>> myreps = new MutableLiveData<>(null);
+    public MutableLiveData<List<RemoteRepoModel> > myreps = new MutableLiveData<>(null);
+    public LiveData<List<GitHubRepository> > myrepslocal;
     private RepoDao repoDao;
     /* access modifiers changed from: private */
     public MutableLiveData<List<RemoteRepoModel>> searchresults = new MutableLiveData<>(null);
     private String sharedPrefFile = "com.example.android.hellosharedprefs";
+    Context context;
+    public LiveData<List<RemoteRepoModel> >getMyRepsremote()
+    {
+        Myrepshelper(context);
+        return myreps;
+    }
+    public LiveData<List<GitHubRepository> > getmyownrepslocally()
+    {
+        return myrepslocal;
+    }
 
     private static class deletetask extends AsyncTask<GitHubRepository, Void, Void> {
         private RepoDao mTaskDao;
@@ -57,22 +77,20 @@ public class RepoRepository {
         }
     }
 
-    public RepoRepository(Application application) {
-        Myrepshelper(application);
+    public RepoRepository(Application application)
+    {
+        context=application;
         SharedPreferences sharedPreferences = application.getSharedPreferences(this.sharedPrefFile, 0);
         this.mPreferences = sharedPreferences;
         String entry_owner = sharedPreferences.getString("USER_NAME", "");
         RepoDao repoDao2 = LocalDatabase.getDatabase(application).repoDao();
         this.repoDao = repoDao2;
         this.favreps = repoDao2.getmyReps(entry_owner);
+        this.myrepslocal=repoDao2.getmyReps(entry_owner+"#@local");
     }
 
-    public MutableLiveData<List<RemoteRepoModel>> getMyreps() {
-        return this.myreps;
-    }
-
-    private void Myrepshelper(Application application) {
-        SharedPreferences sharedPreferences = application.getSharedPreferences(this.sharedPrefFile, 0);
+    private void Myrepshelper(final Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(this.sharedPrefFile, 0);
         this.mPreferences = sharedPreferences;
         String str = "";
         String token = sharedPreferences.getString("TOKEN_NAME", str);
@@ -93,7 +111,6 @@ public class RepoRepository {
             public void onResponse(Call<List<RemoteRepoModel>> call, Response<List<RemoteRepoModel>> response) {
                 List<RemoteRepoModel> l = (List) response.body();
                 RepoRepository.this.myreps.postValue(l);
-
             }
 
             public void onFailure(Call<List<RemoteRepoModel>> call, Throwable t) {

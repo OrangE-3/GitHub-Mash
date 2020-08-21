@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         String hh = mPreferences.getString("USER_URL", null);
         g.setText(gg);
         h.setText(hh);
-        Picasso.get().load(mPreferences.getString("USER_AVATAR", null)).resize(180,180).into(v);
+        Picasso.get().load(mPreferences.getString("USER_AVATAR", null)).resize(100,100).into(v);
         final Context context=this;
         final Activity activity=this;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

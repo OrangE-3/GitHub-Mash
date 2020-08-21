@@ -1,18 +1,19 @@
 package com.orange.githubmash.data.local;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(primaryKeys = {"entry_owner","name","owner"})
 public class GitHubRepository {
 
-    /* renamed from: ID */
-    @PrimaryKey(autoGenerate = true)
-    private int ID;
     private String description;
+    @NonNull
     private String entry_owner;
+    @NonNull
     private String name;
+    @NonNull
     private String owner;
     private String url;
     private Integer watchers;
@@ -50,9 +51,6 @@ public class GitHubRepository {
         return this.entry_owner;
     }
 
-    public int getID() {
-        return this.ID;
-    }
 
     public void setEntry_owner(String entry_owner2) {
         this.entry_owner = entry_owner2;
@@ -78,7 +76,4 @@ public class GitHubRepository {
         this.watchers = watchers2;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 }

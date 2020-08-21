@@ -1,16 +1,16 @@
 package com.orange.githubmash.data.local;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(primaryKeys = {"owner","login"})
 public class User {
 
-    /* renamed from: ID */
-    @PrimaryKey(autoGenerate = true)
-    private int ID;
     private String avatar_url;
+    @NonNull
     private String login;
+    @NonNull
     private String owner;
     private String url;
 
@@ -37,13 +37,6 @@ public class User {
         return this.owner;
     }
 
-    public int getID() {
-        return this.ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 
     public void setOwner(String owner2) {
         this.owner = owner2;
