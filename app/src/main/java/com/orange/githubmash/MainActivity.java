@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -98,24 +99,22 @@ public class MainActivity extends AppCompatActivity {
                     g.setText(gg);
                     h.setText(hh);
                 }
+
+                ImageView v= findViewById(R.id.My_Avatar);
+                if(v != null)
+                Picasso.get().load(mPreferences.getString("USER_AVATAR", null)).resize(100,100).into(v);
+                if(gg==null) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
-        if(mPreferences.getString("USER_NAME",null)==null) {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        View headerView = navigationView.getHeaderView(0);
-        TextView g = (TextView) headerView.findViewById(R.id.My_Name);
-        TextView h = (TextView) headerView.findViewById(R.id.My_url);
-        ImageView v=headerView.findViewById(R.id.My_Avatar);
-        String gg = mPreferences.getString("USER_NAME", null);
-        String hh = mPreferences.getString("USER_URL", null);
-        g.setText(gg);
-        h.setText(hh);
-        Picasso.get().load(mPreferences.getString("USER_AVATAR", null)).resize(100,100).into(v);
+
+
+
         final Context context=this;
         final Activity activity=this;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -228,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         String entry_owner = mPreferences.getString("USER_NAME", "");
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
