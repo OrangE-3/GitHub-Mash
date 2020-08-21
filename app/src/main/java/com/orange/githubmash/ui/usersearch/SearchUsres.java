@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class SearchUsres extends AppCompatActivity {
         final Context c=this;
         toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         text.addTextChangedListener(new TextWatcher() {
+            CountDownTimer timer = null;
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -65,27 +67,39 @@ public class SearchUsres extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String query = charSequence.toString();
-                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    // fetch data
-                    searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
-                        @Override
-                        public void onChanged(List<RemoteOwner> remoteOwners) {
-                            adapter.setUsers(remoteOwners);
-                        }
-                    });
-                } else {
-                    toast.setText("You must be connected to the internet.");
-                    toast.show();
-                }
+
             }
 
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(final Editable editable) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+                timer = new CountDownTimer(300, 1000) {
 
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        String query = editable.toString();
+                        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            // fetch data
+                            searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
+                                @Override
+                                public void onChanged(List<RemoteOwner> remoteOwners) {
+                                    adapter.setUsers(remoteOwners);
+                                }
+                            });
+                        } else {
+                            toast.setText("You must be connected to the internet.");
+                            toast.show();
+                        }
+                    }
+
+                }.start();
             }
         });
 

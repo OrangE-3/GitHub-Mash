@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -55,38 +56,55 @@ public class SearchRepositories extends AppCompatActivity {
         final LifecycleOwner o=this;
         toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         text.addTextChangedListener(new TextWatcher() {
+            CountDownTimer timer = null;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String query= charSequence.toString();
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
 
-                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    // fetch data
-                    searchRepViewModel.searchrep(query).observe(o, new Observer<List<RemoteRepoModel>>() {
-                        @Override
-                        public void onChanged(List<RemoteRepoModel> remoteRepoModels)
-                        {
-
-                            adapter.setReps(remoteRepoModels);
-                        }
-                    });
-                        }
-                else {
-                    toast.setText("You must be connected to the internet.");
-                    toast.show();
-                }
 
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(final Editable editable) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+                timer = new CountDownTimer(300, 1000) {
 
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+
+                        //do what you wish
+                        String query= editable.toString();
+
+                        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                        if (networkInfo != null && networkInfo.isConnected()) {
+                            // fetch data
+                            searchRepViewModel.searchrep(query).observe(o, new Observer<List<RemoteRepoModel>>() {
+                                @Override
+                                public void onChanged(List<RemoteRepoModel> remoteRepoModels)
+                                {
+
+                                    adapter.setReps(remoteRepoModels);
+                                }
+                            });
+                        }
+                        else {
+                            toast.setText("You must be connected to the internet.");
+                            toast.show();
+                        }
+
+                    }
+
+                }.start();
             }
         });
 
