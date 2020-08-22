@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -65,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int NEW_REP_ACTIVITY_REQUEST_CODE = 2;
     public static final String sharedPrefFile = "com.example.android.hellosharedprefs";
     private SharedPreferences mPreferences;
+    private TextView g;
+    private TextView h;
+    private ImageView v;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,42 +83,15 @@ public class MainActivity extends AppCompatActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
+       mViewModel= ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        mPreferences = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
+       mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        this.mPreferences = sharedPreferences;
-        mViewModel= ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        mViewModel.getme().observe(this, new Observer<RemoteOwner>() {
-            @Override
-            public void onChanged(RemoteOwner remoteOwner)
-            {
-                TextView g = findViewById(R.id.My_Name);
-                TextView h = findViewById(R.id.My_url);
-                String gg = mPreferences.getString("USER_NAME", null);
-                String hh = mPreferences.getString("USER_URL", null);
-                if(g!=null && h!=null) {
-                    g.setText(gg);
-                    h.setText(hh);
-                }
-
-                ImageView v= findViewById(R.id.My_Avatar);
-                if(v != null)
-                Picasso.get().load(mPreferences.getString("USER_AVATAR", null)).resize(100,100).into(v);
-                if(gg==null) {
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
 
 
         final Context context=this;
@@ -144,6 +123,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        g = navigationView.getHeaderView(0).findViewById(R.id.My_Name);
+        h = navigationView.getHeaderView(0).findViewById(R.id.My_url);
+        v= navigationView.getHeaderView(0).findViewById(R.id.My_Avatar);
+
+        mViewModel.getname().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                g.setText(s);
+            }
+        });
+        mViewModel.geturl().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                h.setText(s);
+            }
+        });
+        mViewModel.getimage().observe(this, new Observer<Bitmap>() {
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                v.setImageBitmap(bitmap);
+            }
+        });
     }
 
 

@@ -22,11 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserRepository {
     private LiveData<List<User>> favusers;
-    /* access modifiers changed from: private */
     public SharedPreferences mPreferences;
-    /* access modifiers changed from: private */
-    public MutableLiveData<RemoteOwner> myself = new MutableLiveData<>(null);
-    /* access modifiers changed from: private */
     public MutableLiveData<List<RemoteOwner>> searchresults = new MutableLiveData<>(null);
     private String sharedPrefFile = "com.example.android.hellosharedprefs";
     private UserDao userDao;
@@ -38,7 +34,6 @@ public class UserRepository {
             this.mTaskDao = dao;
         }
 
-        /* access modifiers changed from: protected */
         public Void doInBackground(User... users) {
             this.mTaskDao.deleteuser(users[0]);
             return null;
@@ -60,7 +55,6 @@ public class UserRepository {
     }
 
     public UserRepository(Application application) {
-        myuserdata(application);
         SharedPreferences sharedPreferences = application.getSharedPreferences(this.sharedPrefFile, 0);
         this.mPreferences = sharedPreferences;
         String entry_owner = sharedPreferences.getString("USER_NAME", "");
@@ -69,38 +63,7 @@ public class UserRepository {
         this.favusers = userDao2.getmyUsers(entry_owner);
     }
 
-    private void myuserdata(Application application) {
-        SharedPreferences sharedPreferences = application.getSharedPreferences(this.sharedPrefFile, 0);
-        this.mPreferences = sharedPreferences;
-        String str = "";
-        String token = sharedPreferences.getString("TOKEN_NAME", str);
-        String tokentype = this.mPreferences.getString("TOKEN_TYPE", str);
-        GitHubClient client = (GitHubClient) new Builder().baseUrl("https://api.github.com").addConverterFactory(GsonConverterFactory.create()).build().create(GitHubClient.class);
-        StringBuilder sb = new StringBuilder();
-        sb.append(tokentype);
-        sb.append(" ");
-        sb.append(token);
-        client.userdata(sb.toString()).enqueue(new Callback<RemoteOwner>() {
-            public void onResponse(Call<RemoteOwner> call, Response<RemoteOwner> response) {
-                if (response.body() != null) {
-                    RemoteOwner p = (RemoteOwner) response.body();
-                    UserRepository.this.myself.postValue(p);
-                    Editor preferencesEditor = UserRepository.this.mPreferences.edit();
-                    preferencesEditor.putString("USER_NAME", p.getLogin());
-                    preferencesEditor.putString("USER_URL", p.getHtmlUrl());
-                    preferencesEditor.putString("USER_AVATAR", p.getAvatarUrl());
-                    preferencesEditor.apply();
-                }
-            }
 
-            public void onFailure(Call<RemoteOwner> call, Throwable t) {
-            }
-        });
-    }
-
-    public MutableLiveData<RemoteOwner> getmyself() {
-        return this.myself;
-    }
 
     private void searchusers(String query) {
         ((GitHubClient) new Builder().baseUrl("https://api.github.com").addConverterFactory(GsonConverterFactory.create()).build().create(GitHubClient.class)).getUserList(query).enqueue(new Callback<OwnerResponse>() {

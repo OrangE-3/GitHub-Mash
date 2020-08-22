@@ -15,8 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orange.githubmash.data.Repositories.UserRepository;
 import com.orange.githubmash.data.remote.AccessToken;
 import com.orange.githubmash.data.remote.GitHubClient;
+import com.orange.githubmash.data.remote.RemoteOwner;
+import com.orange.githubmash.data.remote.RemoteRepoModel;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,25 +70,54 @@ public class Login extends AppCompatActivity {
                 GitHubClient client = retrofit.create(GitHubClient.class);
 
                 Call<AccessToken> atc = client.getAccessToken(Login.clientID, Login.clientSecret, code);
-
+                mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
                 atc.enqueue(new Callback<AccessToken>() {
                     @Override
                     public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                         AccessToken token = response.body();
-                        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
                         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
                         preferencesEditor.putString("TOKEN_NAME", token.getAccesstoken());
                         preferencesEditor.putString("TOKEN_TYPE", token.getTokentype());
                         preferencesEditor.apply();
-                        Intent intent = new Intent(Login.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+
+
+
+                        GitHubClient c = (GitHubClient) new Retrofit.Builder()
+                                .baseUrl("https://api.github.com")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build()
+                                .create(GitHubClient.class);
+                        Call<RemoteOwner> calll = c.userdata(token.getTokentype()+" "+token.getAccesstoken());
+                        calll.enqueue(new Callback<RemoteOwner>() {
+                            public void onResponse(Call<RemoteOwner> call, Response<RemoteOwner> response) {
+                                if (response.body() != null) {
+                                    RemoteOwner p = (RemoteOwner) response.body();
+                                    SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                                    preferencesEditor.putString("USER_NAME", p.getLogin());
+                                    preferencesEditor.putString("USER_URL", p.getHtmlUrl());
+                                    preferencesEditor.putString("USER_AVATAR", p.getAvatarUrl());
+                                    preferencesEditor.apply();
+                                    Intent intent = new Intent(Login.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+
+                            public void onFailure(Call<RemoteOwner> call, Throwable t) {
+                                call.clone().enqueue(this);
+                            }
+                        });
                     }
 
                     @Override
-                    public void onFailure(Call<AccessToken> call, Throwable t) {
+                    public void onFailure(Call<AccessToken> call, Throwable t)
+                    {
+                        call.clone().enqueue(this);
                     }
                 });
+
+
+
             }
         }
     }
