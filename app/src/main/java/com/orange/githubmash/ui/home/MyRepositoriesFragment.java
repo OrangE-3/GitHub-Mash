@@ -43,25 +43,25 @@ public class MyRepositoriesFragment extends Fragment
 {
     SwipeRefreshLayout mSwipeRefreshLayout;
     private MyRepoViewModel mRepoViewModel;
-
+    private NetworkInfo networkInfo;
+    private static Boolean isExecuted=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root= inflater.inflate(R.layout.fragment_my_repos, container, false);
-
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipetorefresh);
+        mRepoViewModel = ViewModelProviders.of(this).get(MyRepoViewModel.class);
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connMgr.getActiveNetworkInfo();
 
+        if(!isExecuted)initialise();
         final RecyclerView recyclerView = root.findViewById(R.id.myrepolist);
         //final RepoListAdapter adapter = new RepoListAdapter(getActivity());
         final LocalRepoListAdapter localadapter = new LocalRepoListAdapter(getActivity(),this.getClass());
         recyclerView.setAdapter(localadapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
 
         final Fragment f=this;
@@ -76,7 +76,6 @@ public class MyRepositoriesFragment extends Fragment
                     }
                 });
 
-        mRepoViewModel = ViewModelProviders.of(this).get(MyRepoViewModel.class);
         mRepoViewModel.getMyReposfromlocal().observe(getViewLifecycleOwner(), new Observer<List<GitHubRepository> >() {
             @Override
             public void onChanged(List<GitHubRepository>reps) {
@@ -111,5 +110,21 @@ public class MyRepositoriesFragment extends Fragment
         });
 
             return root;
+        }
+
+        private void initialise()
+        {
+                mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteRepoModel>>() {
+                    @Override
+                    public void onChanged(List<RemoteRepoModel> remoteRepoModels) {
+                        if(remoteRepoModels!=null) {
+                            RemoteToLocalRepository converter = new RemoteToLocalRepository(requireContext());
+                            for (int i = 0; i < remoteRepoModels.size(); ++i) {
+                                GitHubRepository g = converter.LocalRep(remoteRepoModels.get(i));
+                                mRepoViewModel.insert(g);
+                            }
+                        }
+                    }
+                });
         }
 }
