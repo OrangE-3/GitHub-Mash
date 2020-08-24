@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(primaryKeys = {"owner","login"})
-public class User {
+public class LocalOwner {
 
     private String avatar_url;
     @NonNull
@@ -14,7 +14,7 @@ public class User {
     private String owner;
     private String url;
 
-    public User(String owner,String login,String url,String avatar_url) {
+    public LocalOwner(String owner, String login, String url, String avatar_url) {
         this.avatar_url = avatar_url;
         this.login = login;
         this.owner = owner;

@@ -1,8 +1,7 @@
-package com.orange.githubmash.ui.home;
+package com.orange.githubmash.ui.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +12,20 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.orange.githubmash.R;
-import com.orange.githubmash.data.local.User;
+import com.orange.githubmash.data.local.LocalOwner;
 import com.orange.githubmash.ui.settings.Settings;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/* renamed from: com.orange.githubmash.ui.home.LocalUserListAdapter */
-public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewHolder> {
+/* renamed from: com.orange.githubmash.ui.adapters.LocalUserListAdapter */
+public class LocalOwnerListAdapter extends Adapter<LocalOwnerListAdapter.UserViewHolder> {
     private final LayoutInflater mInflater;
-    private List<User> mOwners;
+    private List<LocalOwner> mOwners;
     private SharedPreferences appsettings;
     private Boolean show_url ;
     private Boolean show_avatar ;
-    /* renamed from: com.orange.githubmash.ui.home.LocalUserListAdapter$UserViewHolder */
+    /* renamed from: com.orange.githubmash.ui.adapters.LocalUserListAdapter$UserViewHolder */
     class UserViewHolder extends ViewHolder {
         /* access modifiers changed from: private */
         public final ImageView avatarurl;
@@ -43,7 +42,7 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
         }
     }
 
-    public LocalUserListAdapter(Context context) {
+    public LocalOwnerListAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
         appsettings= PreferenceManager.getDefaultSharedPreferences(context);
         show_url = appsettings.getBoolean(Settings.user_urrl,false);
@@ -55,9 +54,9 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
     }
 
     public void onBindViewHolder(UserViewHolder holder, int position) {
-        List<User> list = this.mOwners;
+        List<LocalOwner> list = this.mOwners;
         if (list != null) {
-            User current = (User) list.get(position);
+            LocalOwner current = (LocalOwner) list.get(position);
             holder.userName.setText(current.getLogin());
             holder.url.setText(current.getUrl());
             holder.avatarurl.setContentDescription(current.getAvatar_url());
@@ -79,17 +78,17 @@ public class LocalUserListAdapter extends Adapter<LocalUserListAdapter.UserViewH
         holder.avatarurl.setContentDescription(str);
     }
 
-    public User getUserAtPosition(int position) {
-        return (User) this.mOwners.get(position);
+    public LocalOwner getUserAtPosition(int position) {
+        return (LocalOwner) this.mOwners.get(position);
     }
 
-    public void setUsers(List<User> reps) {
+    public void setUsers(List<LocalOwner> reps) {
         this.mOwners = reps;
         notifyDataSetChanged();
     }
 
     public int getItemCount() {
-        List<User> list = this.mOwners;
+        List<LocalOwner> list = this.mOwners;
         if (list != null) {
             return list.size();
         }

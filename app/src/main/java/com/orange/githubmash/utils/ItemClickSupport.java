@@ -1,10 +1,12 @@
-package com.orange.githubmash;
+package com.orange.githubmash.utils;
 
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener;
+
+import com.orange.githubmash.R;
 
 public class ItemClickSupport {
     private OnChildAttachStateChangeListener mAttachListener = new OnChildAttachStateChangeListener() {

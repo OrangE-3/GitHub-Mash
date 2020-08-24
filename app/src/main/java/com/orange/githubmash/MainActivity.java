@@ -6,10 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -20,26 +17,19 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.orange.githubmash.data.local.GitHubRepository;
-import com.orange.githubmash.data.local.User;
-import com.orange.githubmash.data.remote.AccessToken;
-import com.orange.githubmash.data.remote.GitHubClient;
-import com.orange.githubmash.data.remote.RemoteOwner;
-import com.orange.githubmash.ui.home.FavRepoViewModel;
-import com.orange.githubmash.ui.home.FavRepositoriesFragment;
-import com.orange.githubmash.ui.home.FavUsersFragment;
-import com.orange.githubmash.ui.home.FavUsersViewModel;
-import com.orange.githubmash.ui.home.MyRepoViewModel;
-import com.orange.githubmash.ui.repsearch.SearchRepositories;
+import com.orange.githubmash.data.local.LocalGitRepoModel;
+import com.orange.githubmash.data.local.LocalOwner;
+import com.orange.githubmash.ui.home.FavGitRepoFragment;
+import com.orange.githubmash.ui.home.FavOwnersFragment;
+import com.orange.githubmash.ui.repsearch.SearchRemoteGitRepo;
 import com.orange.githubmash.ui.settings.Settings;
-import com.orange.githubmash.ui.usersearch.SearchUsres;
-import com.squareup.picasso.Picasso;
+import com.orange.githubmash.ui.ownersearch.SearchRemoteOwners;
+import com.orange.githubmash.utils.fields.GlobalFields;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -50,23 +40,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel mViewModel;
     private AppBarConfiguration mAppBarConfiguration;
     FloatingActionButton fab, fabsearchuser, fabsearchrepostory;
     Float translationY = 100f;
     OvershootInterpolator interpolator = new OvershootInterpolator();
-    private static final String TAG = "MainActivity";
     Boolean isMenuOpen = false;
     public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 1;
     public static final int NEW_REP_ACTIVITY_REQUEST_CODE = 2;
-    public static final String sharedPrefFile = "com.example.android.hellosharedprefs";
     private SharedPreferences mPreferences;
     private TextView g;
     private TextView h;
@@ -84,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
        mViewModel= ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        mPreferences = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
+        mPreferences = getSharedPreferences(GlobalFields.sharedPrefFile,MODE_PRIVATE);
        mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.logout)
                 .setDrawerLayout(drawer)
@@ -204,14 +186,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void clicksearchu(View view)
     {
-        Intent intent = new Intent(MainActivity.this, SearchUsres.class);
+        Intent intent = new Intent(MainActivity.this, SearchRemoteOwners.class);
         startActivityForResult(intent, NEW_USER_ACTIVITY_REQUEST_CODE);
 
     }
 
     public void clicksearchr(View view)
     {
-        Intent intent = new Intent(MainActivity.this, SearchRepositories.class);
+        Intent intent = new Intent(MainActivity.this, SearchRemoteGitRepo.class);
         startActivityForResult(intent, NEW_REP_ACTIVITY_REQUEST_CODE);
 
     }
@@ -233,12 +215,12 @@ public class MainActivity extends AppCompatActivity {
         String entry_owner = mPreferences.getString("USER_NAME", "");
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            FavUsersFragment.favUserViewModel.insert(new User(entry_owner, data.getStringExtra(SearchUsres.REPL_user), data.getStringExtra(SearchUsres.REPL_url), data.getStringExtra(SearchUsres.REPL_avatar)));
-                Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchUsres.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
+            FavOwnersFragment.favUserViewModel.insert(new LocalOwner(entry_owner, data.getStringExtra(SearchRemoteOwners.REPL_user), data.getStringExtra(SearchRemoteOwners.REPL_url), data.getStringExtra(SearchRemoteOwners.REPL_avatar)));
+                Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchRemoteOwners.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
         } else if (requestCode == NEW_REP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            GitHubRepository gitHubRepository = new GitHubRepository(entry_owner, data.getStringExtra(SearchRepositories.REPL_owner), data.getStringExtra(SearchRepositories.REPL_name), data.getStringExtra(SearchRepositories.REPL_description), data.getStringExtra(SearchRepositories.REPL_url), data.getIntExtra(SearchRepositories.REPL_watchers, 0));
-            FavRepositoriesFragment.favRepoViewModel.insert(gitHubRepository);
-            Toast.makeText(getApplicationContext(),"Repository named: "+data.getStringExtra(SearchRepositories.REPL_name)+" added!",Toast.LENGTH_SHORT).show();
+            LocalGitRepoModel localGitRepoModel = new LocalGitRepoModel(entry_owner, data.getStringExtra(SearchRemoteGitRepo.REPL_owner), data.getStringExtra(SearchRemoteGitRepo.REPL_name), data.getStringExtra(SearchRemoteGitRepo.REPL_description), data.getStringExtra(SearchRemoteGitRepo.REPL_url), data.getIntExtra(SearchRemoteGitRepo.REPL_watchers, 0));
+            FavGitRepoFragment.favGitRepoViewModel.insert(localGitRepoModel);
+            Toast.makeText(getApplicationContext(),"Repository named: "+data.getStringExtra(SearchRemoteGitRepo.REPL_name)+" added!",Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "Nothing Added", Toast.LENGTH_SHORT).show();
         }

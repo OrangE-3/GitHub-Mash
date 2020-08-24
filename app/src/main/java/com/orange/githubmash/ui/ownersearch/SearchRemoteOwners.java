@@ -1,8 +1,6 @@
-package com.orange.githubmash.ui.usersearch;
+package com.orange.githubmash.ui.ownersearch;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,31 +13,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.orange.githubmash.ItemClickSupport;
+import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteOwner;
-import com.orange.githubmash.data.remote.RemoteRepoModel;
-import com.orange.githubmash.ui.home.MyRepoViewModel;
-import com.orange.githubmash.ui.home.RepoListAdapter;
-import com.orange.githubmash.ui.home.UserListAdapter;
-import com.orange.githubmash.ui.repsearch.SearchRepViewModel;
+import com.orange.githubmash.ui.adapters.RemoteOwnerListAdapter;
 
 import java.util.List;
 
-public class SearchUsres extends AppCompatActivity {
+public class SearchRemoteOwners extends AppCompatActivity {
     public static final String REPL_avatar = "com.orange.githubmash.ui.usersearch.reply.avatar";
     public static final String REPL_url = "com.orange.githubmash.ui.usersearch.reply.url";
     public static final String REPL_user = "com.orange.githubmash.ui.usersearch.reply.user";
-    SearchUsersViewModel searchUsersViewModel;
+    SearchRemoteOwnersViewModel searchRemoteOwnersViewModel;
     SearchView textv;
     Toast toast=null;
     @Override
@@ -48,14 +37,14 @@ public class SearchUsres extends AppCompatActivity {
         setContentView(R.layout.activity_search_usres);
 
         RecyclerView recyclerView =findViewById(R.id.usersearchrec);
-        final UserListAdapter adapter = new UserListAdapter(this);
+        final RemoteOwnerListAdapter adapter = new RemoteOwnerListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
 
         textv=(SearchView) findViewById(R.id.usersearchbut);
-        searchUsersViewModel= ViewModelProviders.of(this).get(SearchUsersViewModel.class);
+        searchRemoteOwnersViewModel = ViewModelProviders.of(this).get(SearchRemoteOwnersViewModel.class);
         final LifecycleOwner o=this;
         final Context c=this;
         toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
@@ -66,7 +55,7 @@ public class SearchUsres extends AppCompatActivity {
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
                     // fetch data
-                    searchUsersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
+                    searchRemoteOwnersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
                         @Override
                         public void onChanged(List<RemoteOwner> remoteOwners) {
                             adapter.setUsers(remoteOwners);
@@ -91,16 +80,16 @@ public class SearchUsres extends AppCompatActivity {
             public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
                 Intent replyintent = new Intent();
                 RemoteOwner user = adapter.getUserAtPosition(position);
-                replyintent.putExtra(SearchUsres.REPL_user, user.getLogin());
-                replyintent.putExtra(SearchUsres.REPL_url, user.getHtmlUrl());
-                replyintent.putExtra(SearchUsres.REPL_avatar, user.getAvatarUrl());
-                SearchUsres.this.setResult(-1, replyintent);
-                SearchUsres.this.finish();
+                replyintent.putExtra(SearchRemoteOwners.REPL_user, user.getLogin());
+                replyintent.putExtra(SearchRemoteOwners.REPL_url, user.getHtmlUrl());
+                replyintent.putExtra(SearchRemoteOwners.REPL_avatar, user.getAvatarUrl());
+                SearchRemoteOwners.this.setResult(-1, replyintent);
+                SearchRemoteOwners.this.finish();
                 return false;
             }
         }).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                SearchUsres.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(adapter.getUserAtPosition(position).getHtmlUrl())));
+                SearchRemoteOwners.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(adapter.getUserAtPosition(position).getHtmlUrl())));
             }
         });
 

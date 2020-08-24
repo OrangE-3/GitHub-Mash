@@ -1,11 +1,9 @@
-package com.orange.githubmash.ui.home;
+package com.orange.githubmash.ui.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,17 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteOwner;
-import com.orange.githubmash.data.remote.RemoteOwner;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserViewHolder>
+public class RemoteOwnerListAdapter extends RecyclerView.Adapter<RemoteOwnerListAdapter.UserViewHolder>
 {
     private final LayoutInflater mInflater;
     private List<RemoteOwner> mOwners; // Cached copy of words
 
-    public UserListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
+    public RemoteOwnerListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.orange.githubmash.R;
+import com.orange.githubmash.ui.adapters.GitRepoTabsPagerAdapter;
 
 public class HomeFragment extends Fragment {
 
@@ -23,7 +24,7 @@ public class HomeFragment extends Fragment {
         tl.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = root.findViewById(R.id.pager);
-        final RepoTabsPagerAdapter adapter = new RepoTabsPagerAdapter(getChildFragmentManager(), tl.getTabCount());
+        final GitRepoTabsPagerAdapter adapter = new GitRepoTabsPagerAdapter(getChildFragmentManager(), tl.getTabCount());
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tl));

@@ -1,4 +1,4 @@
-package com.orange.githubmash.ui.home;
+package com.orange.githubmash.ui.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,13 +10,14 @@ import android.widget.TextView;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.orange.githubmash.R;
-import com.orange.githubmash.data.local.GitHubRepository;
+import com.orange.githubmash.data.local.LocalGitRepoModel;
+import com.orange.githubmash.ui.home.FavGitRepoFragment;
 import com.orange.githubmash.ui.settings.Settings;
 
 import java.util.List;
-public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdapter.LocalRepoViewHolder> {
+public class LocalGitRepoListAdapter extends RecyclerView.Adapter<LocalGitRepoListAdapter.LocalRepoViewHolder> {
     private final LayoutInflater mInflater;
-    private List<GitHubRepository> mRepos;
+    private List<LocalGitRepoModel> mRepos;
     private SharedPreferences appsettings;
     private Boolean show_owner;
     private Boolean show_descr;
@@ -36,11 +37,11 @@ public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdap
         }
     }
 
-    public LocalRepoListAdapter(Context context,Class clas) {
+    public LocalGitRepoListAdapter(Context context, Class clas) {
         this.mInflater = LayoutInflater.from(context);
         appsettings= PreferenceManager.getDefaultSharedPreferences(context);
 
-        if(clas==FavRepositoriesFragment.class) {
+        if(clas== FavGitRepoFragment.class) {
             show_owner = appsettings.getBoolean(Settings.fav_owner, false);
             show_descr = appsettings.getBoolean(Settings.fav_descr, false);
             show_watchers = appsettings.getBoolean(Settings.fav_watchers, false);
@@ -59,7 +60,7 @@ public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdap
 
     public void onBindViewHolder(LocalRepoViewHolder holder, int position) {
         if (mRepos != null) {
-            GitHubRepository current = (GitHubRepository) mRepos.get(position);
+            LocalGitRepoModel current = (LocalGitRepoModel) mRepos.get(position);
             holder.repoName.setText(current.getName());
             holder.repoOwner.setText("Owner: "+current.getOwner());
             holder.repoDescription.setText("Description: "+current.getDescription());
@@ -86,17 +87,17 @@ public class LocalRepoListAdapter extends RecyclerView.Adapter<LocalRepoListAdap
         holder.repoWatchers.setText(str);
     }
 
-    public GitHubRepository getRepAtPosition(int position) {
-        return (GitHubRepository) this.mRepos.get(position);
+    public LocalGitRepoModel getRepAtPosition(int position) {
+        return (LocalGitRepoModel) this.mRepos.get(position);
     }
 
-    public void setReps(List<GitHubRepository> reps) {
+    public void setReps(List<LocalGitRepoModel> reps) {
         this.mRepos = reps;
         notifyDataSetChanged();
     }
 
     public int getItemCount() {
-        List<GitHubRepository> list = this.mRepos;
+        List<LocalGitRepoModel> list = this.mRepos;
         if (list != null) {
             return list.size();
         }

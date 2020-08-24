@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(primaryKeys = {"entry_owner","name","owner"})
-public class GitHubRepository {
+public class LocalGitRepoModel {
 
     private String description;
     @NonNull
@@ -18,7 +18,7 @@ public class GitHubRepository {
     private String url;
     private Integer watchers;
 
-    public GitHubRepository(String entry_owner, String owner, String name, String description, String url, Integer watchers) {
+    public LocalGitRepoModel(String entry_owner, String owner, String name, String description, String url, Integer watchers) {
         this.description = description;
         this.entry_owner = entry_owner;
         this.name = name;

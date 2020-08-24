@@ -2,7 +2,6 @@ package com.orange.githubmash.data.remote;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.orange.githubmash.data.local.User;
 
 import java.util.List;
 

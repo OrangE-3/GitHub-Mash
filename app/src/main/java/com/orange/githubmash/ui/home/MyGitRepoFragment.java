@@ -2,47 +2,38 @@ package com.orange.githubmash.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.orange.githubmash.ItemClickSupport;
-import com.orange.githubmash.MainActivity;
+import com.orange.githubmash.ui.adapters.LocalGitRepoListAdapter;
+import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.R;
-import com.orange.githubmash.data.Converters.RemoteToLocalRepository;
-import com.orange.githubmash.data.local.GitHubRepository;
-import com.orange.githubmash.data.local.LocalDatabase;
-import com.orange.githubmash.data.remote.RemoteRepoModel;
-import com.orange.githubmash.ui.settings.Settings;
+import com.orange.githubmash.data.Converters.GitRepoConverter;
+import com.orange.githubmash.data.local.LocalGitRepoModel;
+import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Collections.shuffle;
 
-public class MyRepositoriesFragment extends Fragment
+public class MyGitRepoFragment extends Fragment
 {
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private MyRepoViewModel mRepoViewModel;
+    private MyGitRepoViewModel mRepoViewModel;
     private NetworkInfo networkInfo;
     private static Boolean isExecuted=false;
     @Override
@@ -50,7 +41,7 @@ public class MyRepositoriesFragment extends Fragment
                              Bundle savedInstanceState) {
         View root= inflater.inflate(R.layout.fragment_my_repos, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipetorefresh);
-        mRepoViewModel = ViewModelProviders.of(this).get(MyRepoViewModel.class);
+        mRepoViewModel = ViewModelProviders.of(this).get(MyGitRepoViewModel.class);
         ConnectivityManager connMgr = (ConnectivityManager) getActivity()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
@@ -58,7 +49,7 @@ public class MyRepositoriesFragment extends Fragment
         if(!isExecuted)initialise();
         final RecyclerView recyclerView = root.findViewById(R.id.myrepolist);
         //final RepoListAdapter adapter = new RepoListAdapter(getActivity());
-        final LocalRepoListAdapter localadapter = new LocalRepoListAdapter(getActivity(),this.getClass());
+        final LocalGitRepoListAdapter localadapter = new LocalGitRepoListAdapter(getActivity(),this.getClass());
         recyclerView.setAdapter(localadapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -72,13 +63,13 @@ public class MyRepositoriesFragment extends Fragment
                         String u= localadapter.getRepAtPosition(position).getUrl();
                         StringBuilder sb = new StringBuilder();
                         sb.append(u);
-                        MyRepositoriesFragment.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(sb.toString())));
+                        MyGitRepoFragment.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(sb.toString())));
                     }
                 });
 
-        mRepoViewModel.getMyReposfromlocal().observe(getViewLifecycleOwner(), new Observer<List<GitHubRepository> >() {
+        mRepoViewModel.getMyReposfromlocal().observe(getViewLifecycleOwner(), new Observer<List<LocalGitRepoModel> >() {
             @Override
-            public void onChanged(List<GitHubRepository>reps) {
+            public void onChanged(List<LocalGitRepoModel>reps) {
                 localadapter.setReps(reps);
             }
         });
@@ -90,13 +81,13 @@ public class MyRepositoriesFragment extends Fragment
             {
                 if (networkInfo != null && networkInfo.isConnected()) {
                     // fetch data
-                    mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteRepoModel>>() {
+                    mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteGitRepoModel>>() {
                         @Override
-                        public void onChanged(List<RemoteRepoModel> remoteRepoModels) {
-                            if(remoteRepoModels!=null) {
-                                RemoteToLocalRepository converter = new RemoteToLocalRepository(requireContext());
-                                for (int i = 0; i < remoteRepoModels.size(); ++i) {
-                                    GitHubRepository g = converter.LocalRep(remoteRepoModels.get(i));
+                        public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels) {
+                            if(remoteGitRepoModels !=null) {
+                                GitRepoConverter converter = new GitRepoConverter(requireContext());
+                                for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
+                                    LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i));
                                     mRepoViewModel.insert(g);
                                 }
                             }
@@ -114,13 +105,13 @@ public class MyRepositoriesFragment extends Fragment
 
         private void initialise()
         {
-                mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteRepoModel>>() {
+                mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteGitRepoModel>>() {
                     @Override
-                    public void onChanged(List<RemoteRepoModel> remoteRepoModels) {
-                        if(remoteRepoModels!=null) {
-                            RemoteToLocalRepository converter = new RemoteToLocalRepository(requireContext());
-                            for (int i = 0; i < remoteRepoModels.size(); ++i) {
-                                GitHubRepository g = converter.LocalRep(remoteRepoModels.get(i));
+                    public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels) {
+                        if(remoteGitRepoModels !=null) {
+                            GitRepoConverter converter = new GitRepoConverter(requireContext());
+                            for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
+                                LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i));
                                 mRepoViewModel.insert(g);
                             }
                         }

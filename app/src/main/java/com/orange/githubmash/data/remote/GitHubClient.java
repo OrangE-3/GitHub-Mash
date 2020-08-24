@@ -9,13 +9,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface GitHubClient
 {
     @GET("/user/repos")
-    Call< List<RemoteRepoModel> > userreps(@Header("Authorization") String token);
+    Call< List<RemoteGitRepoModel> > userreps(@Header("Authorization") String token);
 
     @GET("/user")
     Call< RemoteOwner > userdata(@Header("Authorization") String token);
@@ -24,7 +23,7 @@ public interface GitHubClient
     Call<OwnerResponse> getUserList(@Query("q") String filter);
 
     @GET("/search/repositories")
-    Call<RepositoryResponse> getrepList(@Query("q") String filter);
+    Call<RemoteGitRepoResponse> getrepList(@Query("q") String filter);
 
 
     @Headers("Accept: application/json")

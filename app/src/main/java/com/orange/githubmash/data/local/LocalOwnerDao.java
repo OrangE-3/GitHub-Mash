@@ -10,20 +10,20 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface UserDao {
+public interface LocalOwnerDao {
 
-    @Query("DELETE from User")
+    @Query("DELETE from LocalOwner")
     void deleteAll();
 
     @Delete
-    void deleteuser(User user);
+    void deleteuser(LocalOwner localOwner);
 
-    @Query("SELECT * from User")
-    LiveData<List<User>> getAllUsers();
+    @Query("SELECT * from LocalOwner")
+    LiveData<List<LocalOwner>> getAllUsers();
 
-    @Query("SELECT * from User where owner=(:str)")
-    LiveData<List<User>> getmyUsers(String str);
+    @Query("SELECT * from LocalOwner where owner=(:str)")
+    LiveData<List<LocalOwner>> getmyUsers(String str);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(User user);
+    void insert(LocalOwner localOwner);
 }

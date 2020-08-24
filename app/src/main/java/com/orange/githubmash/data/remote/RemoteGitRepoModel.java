@@ -2,18 +2,18 @@ package com.orange.githubmash.data.remote;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RemoteRepoModel implements Parcelable {
-    public static final Creator<RemoteRepoModel> CREATOR = new Creator<RemoteRepoModel>() {
-        public RemoteRepoModel createFromParcel(Parcel in) {
-            return new RemoteRepoModel(in);
+public class RemoteGitRepoModel implements Parcelable {
+    public static final Creator<RemoteGitRepoModel> CREATOR = new Creator<RemoteGitRepoModel>() {
+        public RemoteGitRepoModel createFromParcel(Parcel in) {
+            return new RemoteGitRepoModel(in);
         }
 
-        public RemoteRepoModel[] newArray(int size) {
-            return new RemoteRepoModel[size];
+        public RemoteGitRepoModel[] newArray(int size) {
+            return new RemoteGitRepoModel[size];
         }
     };
     @SerializedName("description")
@@ -32,7 +32,7 @@ public class RemoteRepoModel implements Parcelable {
     @Expose
     private RemoteOwner owner;
 
-    public RemoteRepoModel(Parcel in) {
+    public RemoteGitRepoModel(Parcel in) {
         this.mDescription = in.readString();
         this.mName = in.readString();
         this.mWatchers = in.readInt();

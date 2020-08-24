@@ -1,4 +1,4 @@
-package com.orange.githubmash.ui.usersearch;
+package com.orange.githubmash.ui.ownersearch;
 
 import android.app.Application;
 
@@ -6,21 +6,19 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.orange.githubmash.data.Repositories.RepoRepository;
-import com.orange.githubmash.data.Repositories.UserRepository;
+import com.orange.githubmash.data.Repositories.OwnerRepository;
 import com.orange.githubmash.data.remote.RemoteOwner;
-import com.orange.githubmash.data.remote.RemoteRepoModel;
 
 import java.util.List;
 
-public class SearchUsersViewModel extends AndroidViewModel
+public class SearchRemoteOwnersViewModel extends AndroidViewModel
 {
-    private UserRepository mRepository;
+    private OwnerRepository mRepository;
     private MutableLiveData<List<RemoteOwner> > myresults;
 
-    public SearchUsersViewModel(Application application) {
+    public SearchRemoteOwnersViewModel(Application application) {
         super(application);
-        this.mRepository = new UserRepository(application);
+        this.mRepository = new OwnerRepository(application);
     }
     LiveData<List<RemoteOwner> > searchusers(String query)
     {

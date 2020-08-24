@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RepositoryResponse
+public class RemoteGitRepoResponse
 {
     @SerializedName("items")
-    private List<RemoteRepoModel> items;
-    public List<RemoteRepoModel> getItems()
+    private List<RemoteGitRepoModel> items;
+    public List<RemoteGitRepoModel> getItems()
     {
         return items;
     }
