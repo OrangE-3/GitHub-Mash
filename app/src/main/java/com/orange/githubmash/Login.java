@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.orange.githubmash.data.remote.AccessToken;
 import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.GitHubService;
@@ -34,9 +35,11 @@ public class Login extends AppCompatActivity {
     private GitHubService gitHubApiService;
     private GitHubClient webclient;
     private GitHubClient apiclient;
+    private FirebaseAnalytics firebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAnalytics=FirebaseAnalytics.getInstance(this);
         gitHubWebService=new GitHubService(GlobalFields.GitHubWebUrl);
         webclient=gitHubWebService.getService();
         gitHubApiService=new GitHubService(GlobalFields.GitHubApiUrl);
@@ -85,6 +88,9 @@ public class Login extends AppCompatActivity {
                                     preferencesEditor.putString("USER_URL", p.getHtmlUrl());
                                     preferencesEditor.putString("USER_AVATAR", p.getAvatarUrl());
                                     preferencesEditor.apply();
+                                    Bundle bundle=new Bundle();
+                                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,p.getLogin());
+                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN,bundle);
                                     Intent intent = new Intent(Login.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
