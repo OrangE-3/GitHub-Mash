@@ -21,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.orange.githubmash.ui.adapters.LocalGitRepoListAdapter;
 import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.R;
-import com.orange.githubmash.data.Converters.GitRepoConverter;
+import com.orange.githubmash.data.Converters.RemoteToLocalConverter;
 import com.orange.githubmash.data.local.LocalGitRepoModel;
 import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 
@@ -87,7 +87,7 @@ public class MyGitRepoFragment extends Fragment
                         @Override
                         public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels) {
                             if(remoteGitRepoModels !=null) {
-                                GitRepoConverter converter = new GitRepoConverter(requireContext());
+                                RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                                 for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
                                     LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i));
                                     mRepoViewModel.insert(g);
@@ -107,11 +107,13 @@ public class MyGitRepoFragment extends Fragment
 
         private void initialise()
         {
+            isExecuted=true;
+            mRepoViewModel.deleteAll();
                 mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteGitRepoModel>>() {
                     @Override
                     public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels) {
                         if(remoteGitRepoModels !=null) {
-                            GitRepoConverter converter = new GitRepoConverter(requireContext());
+                            RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                             for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
                                 LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i));
                                 mRepoViewModel.insert(g);

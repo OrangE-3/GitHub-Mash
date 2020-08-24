@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.orange.githubmash.data.Converters.GitRepoConverter;
+import com.orange.githubmash.data.Converters.RemoteToLocalConverter;
 import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.ui.adapters.LocalGitRepoListAdapter;
 import com.orange.githubmash.utils.ItemClickSupport;
@@ -97,7 +96,7 @@ public class FavGitRepoFragment extends Fragment {
                         @Override
                         public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels) {
                             if(remoteGitRepoModels !=null) {
-                                GitRepoConverter converter = new GitRepoConverter(requireContext());
+                                RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                                 for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
                                     LocalGitRepoModel g = converter.LocalRepfav(remoteGitRepoModels.get(i));
                                     favGitRepoViewModel.insert(g);
@@ -117,13 +116,14 @@ public class FavGitRepoFragment extends Fragment {
 
     private void initialise()
     {
+        isExecuted=true;
         favGitRepoViewModel.deleteAll();
 
         favGitRepoViewModel.getFavRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteGitRepoModel>>() {
             @Override
             public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels) {
                 if(remoteGitRepoModels !=null) {
-                    GitRepoConverter converter = new GitRepoConverter(requireContext());
+                    RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                     for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
                         LocalGitRepoModel g = converter.LocalRepfav(remoteGitRepoModels.get(i));
                         favGitRepoViewModel.insert(g);

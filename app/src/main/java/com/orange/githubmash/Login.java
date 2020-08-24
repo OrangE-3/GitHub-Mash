@@ -52,7 +52,7 @@ public class Login extends AppCompatActivity {
 
 
     public void LoginClick(View view) {
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalFields.GitHubWebUrl+"/login/oauth/authorize"+"?client_id="+clientID+"&scope=read:user%20repo"+"&redirect_uri="+callback));
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(GlobalFields.GitHubWebUrl+"/login/oauth/authorize"+"?client_id="+clientID+"&scope=read:user%20repo%20user:follow"+"&redirect_uri="+callback));
         startActivity(intent);
     }
     @Override

@@ -34,6 +34,10 @@ public interface GitHubClient
     @GET("/user/starred")
     Call< List<RemoteGitRepoModel> > repfavs(@Header("Authorization") String token);
 
+    @GET("/user/following")
+    Call< List<RemoteOwner> > userfavs(@Header("Authorization") String token);
+
+
     @Headers("Accept: application/json")
     @POST("/login/oauth/access_token")
     @FormUrlEncoded
@@ -53,6 +57,14 @@ public interface GitHubClient
     @DELETE("/user/starred/{owner}/{repo}")
     Call<Void> unstarrepo(@Header("Authorization") String token, @Path("owner") String owner,@Path("repo") String repo);
 
+    @Headers({
+            "Content-Length: 0",
+            "Accept: application/json"
+    })
+    @PUT("/user/following/{username}")
+    Call<Void> staruser(@Header("Authorization") String token, @Path("username") String username);
 
+    @DELETE("/user/following/{username}")
+    Call<Void> unstaruser(@Header("Authorization") String token, @Path("username") String username);
 
 }

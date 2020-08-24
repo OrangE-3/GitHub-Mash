@@ -3,15 +3,18 @@ package com.orange.githubmash.data.Repositories;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.orange.githubmash.data.local.LocalDatabase;
+import com.orange.githubmash.data.local.LocalGitRepoDao;
 import com.orange.githubmash.data.local.LocalOwner;
 import com.orange.githubmash.data.local.LocalOwnerDao;
 import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.GitHubService;
 import com.orange.githubmash.data.remote.OwnerResponse;
+import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.utils.fields.GlobalFields;
 
@@ -25,12 +28,81 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OwnerRepository {
     private LiveData<List<LocalOwner>> favusers;
+    private MutableLiveData<List<RemoteOwner> > favownersremote=new MutableLiveData<>(null);
     public SharedPreferences mPreferences;
     public MutableLiveData<List<RemoteOwner>> searchresults = new MutableLiveData<>(null);
     private LocalOwnerDao localOwnerDao;
     private GitHubService gitHubService;
     private GitHubClient client;
     private String entry_owner;
+    String token;
+    String tokentype;
+
+    public void favinsertHelper(LocalOwner localOwner) {
+        client.staruser(tokentype+" "+token,localOwner.getLogin()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i("fdsfs","Fasfa");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
+    }
+
+    public void favdeleteHelper(LocalOwner localOwner) {
+        client.unstaruser(tokentype+" "+token,localOwner.getLogin()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i("fdsfs","Fasfa");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
+    }
+
+    public void deleteallfavs() {
+        new deleteallfavstask(this.localOwnerDao).execute();
+    }
+
+    private static class deleteallfavstask extends AsyncTask<Void,Void,Void>
+    {
+        private LocalOwnerDao mTaskDao;
+
+        deleteallfavstask(LocalOwnerDao dao) {
+            mTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mTaskDao.deleteAll();
+            return null;
+        }
+    }
+
+    public LiveData<List<RemoteOwner>> getFavOwnersRemote() {
+        favownersremote=new MutableLiveData<>(null);
+        Favownershelper();
+        return favownersremote;
+    }
+
+    private void Favownershelper() {
+        Call<List<RemoteOwner>> atc = client.userfavs(tokentype+" "+token);
+        atc.enqueue(new Callback<List<RemoteOwner>>() {
+
+            public void onResponse(Call<List<RemoteOwner>> call, Response<List<RemoteOwner>> response) {
+                List<RemoteOwner> l = response.body();
+                favownersremote.postValue(l);
+            }
+
+            public void onFailure(Call<List<RemoteOwner>> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
+    }
 
     private static class deletetask extends AsyncTask<LocalOwner, Void, Void> {
         private LocalOwnerDao mTaskDao;
@@ -64,6 +136,8 @@ public class OwnerRepository {
         client=gitHubService.getService();
         mPreferences= application.getSharedPreferences(GlobalFields.sharedPrefFile, 0);
         entry_owner = mPreferences.getString("USER_NAME", "");
+        token = mPreferences.getString("TOKEN_NAME", "");
+        tokentype=mPreferences.getString("TOKEN_TYPE", "");
         LocalOwnerDao localOwnerDao2 = LocalDatabase.getDatabase(application).userDao();
         this.localOwnerDao = localOwnerDao2;
         this.favusers = localOwnerDao2.getmyUsers(entry_owner);
