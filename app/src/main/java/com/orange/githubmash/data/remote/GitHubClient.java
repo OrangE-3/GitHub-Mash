@@ -3,12 +3,15 @@ package com.orange.githubmash.data.remote;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface GitHubClient
@@ -25,6 +28,11 @@ public interface GitHubClient
     @GET("/search/repositories")
     Call<RemoteGitRepoResponse> getrepList(@Query("q") String filter);
 
+    @GET("/user/following")
+    Call< List<RemoteOwner> > userfollowing(@Header("Authorization") String token);
+
+    @GET("/user/starred")
+    Call< List<RemoteGitRepoModel> > repfavs(@Header("Authorization") String token);
 
     @Headers("Accept: application/json")
     @POST("/login/oauth/access_token")
@@ -34,4 +42,17 @@ public interface GitHubClient
             @Field("client_secret") String client_secret,
             @Field("code") String code
     );
+
+    @Headers({
+            "Content-Length: 0",
+            "Accept: application/json"
+    })
+    @PUT("/user/starred/{owner}/{repo}")
+    Call<Void> starrepo(@Header("Authorization") String token, @Path("owner") String owner,@Path("repo") String repo);
+
+    @DELETE("/user/starred/{owner}/{repo}")
+    Call<Void> unstarrepo(@Header("Authorization") String token, @Path("owner") String owner,@Path("repo") String repo);
+
+
+
 }

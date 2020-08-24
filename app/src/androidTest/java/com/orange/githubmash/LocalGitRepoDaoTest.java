@@ -87,7 +87,7 @@ public class LocalGitRepoDaoTest {
         final LocalGitRepoModel localGitRepoModel2= new LocalGitRepoModel("bar","foo","cat","go","http://ug.com",234);
         localGitRepoDao.insert(localGitRepoModel1);
         localGitRepoDao.insert(localGitRepoModel2);
-        localGitRepoDao.deleterep(localGitRepoModel1);
+        localGitRepoDao.deleterep(localGitRepoModel1.getEntry_owner(),localGitRepoModel1.getName(),localGitRepoModel1.getOwner());
         localGitRepoDao.getAllRepos().observeForever(new Observer<List<LocalGitRepoModel>>() {
             @Override
             public void onChanged(List<LocalGitRepoModel> byName) {

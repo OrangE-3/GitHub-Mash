@@ -32,5 +32,8 @@ public class MyGitRepoViewModel extends AndroidViewModel {
         this.mRemoteList=mRepository.getMyRepsremote();
         return mRemoteList;
     }
+    public void deleteAll() {
+        this.mRepository.deleteallmine();
+    }
 
 }

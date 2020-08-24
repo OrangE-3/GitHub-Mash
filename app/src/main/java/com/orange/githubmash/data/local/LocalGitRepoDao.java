@@ -6,8 +6,12 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
+import androidx.room.Update;
 
 import java.util.List;
+
+import retrofit2.http.Header;
 
 @Dao
 public interface LocalGitRepoDao {
@@ -15,8 +19,13 @@ public interface LocalGitRepoDao {
     @Query("DELETE from LocalGitRepoModel")
     void deleteAll();
 
-    @Delete
-    void deleterep(LocalGitRepoModel localGitRepoModel);
+    @Query("DELETE from LocalGitRepoModel where entry_owner=(:str)")
+    void deletereps(String str);
+
+
+    @Query("DELETE from LocalGitRepoModel where entry_owner=(:str) AND name=(:name) AND owner=(:owner)")
+    void deleterep(String str,String name,String owner);
+
 
     @Query("SELECT * from LocalGitRepoModel")
     LiveData<List<LocalGitRepoModel>> getAllRepos();

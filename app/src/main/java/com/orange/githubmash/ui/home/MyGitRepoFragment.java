@@ -42,11 +42,11 @@ public class MyGitRepoFragment extends Fragment
         View root= inflater.inflate(R.layout.fragment_my_repos, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipetorefresh);
         mRepoViewModel = ViewModelProviders.of(this).get(MyGitRepoViewModel.class);
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+        final ConnectivityManager connMgr = (ConnectivityManager) getActivity()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
 
-        if(!isExecuted)initialise();
+        if(!isExecuted && networkInfo != null && networkInfo.isConnected())initialise();
         final RecyclerView recyclerView = root.findViewById(R.id.myrepolist);
         //final RepoListAdapter adapter = new RepoListAdapter(getActivity());
         final LocalGitRepoListAdapter localadapter = new LocalGitRepoListAdapter(getActivity(),this.getClass());
@@ -79,7 +79,9 @@ public class MyGitRepoFragment extends Fragment
             @Override
             public void onRefresh()
             {
+                networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
+                    mRepoViewModel.deleteAll();
                     // fetch data
                     mRepoViewModel.getMyRepsremote().observe(getViewLifecycleOwner(), new Observer<List<RemoteGitRepoModel>>() {
                         @Override
@@ -94,7 +96,7 @@ public class MyGitRepoFragment extends Fragment
                         }
                     });
                 } else {
-                    Toast.makeText(getContext(),"To view your personal Repositories, You must be connected to the internet.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"To Refresh your personal Repositories, You must be connected to the internet.",Toast.LENGTH_SHORT).show();
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
             }

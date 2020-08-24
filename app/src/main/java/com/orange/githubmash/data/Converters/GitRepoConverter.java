@@ -21,7 +21,13 @@ public class GitRepoConverter
 
     public LocalGitRepoModel LocalRep (RemoteGitRepoModel remote)
     {
-        String entry_owner = mPreferences.getString("USER_NAME", "")+"#@local";
+        String entry_owner = mPreferences.getString("USER_NAME", "")+"#@localmine";
+        LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
+        return g;
+    }
+    public LocalGitRepoModel LocalRepfav (RemoteGitRepoModel remote)
+    {
+        String entry_owner = mPreferences.getString("USER_NAME", "")+"#@localfav";
         LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
         return g;
     }
@@ -32,6 +38,15 @@ public class GitRepoConverter
         for(int i=0;i<remote.size();++i)
         {
             l.add(LocalRep(remote.get(i)));
+        }
+        return l;
+    }
+    public List<LocalGitRepoModel> LocalRepfavList (List<RemoteGitRepoModel> remote)
+    {
+        List<LocalGitRepoModel> l=new ArrayList<LocalGitRepoModel>();
+        for(int i=0;i<remote.size();++i)
+        {
+            l.add(LocalRepfav(remote.get(i)));
         }
         return l;
     }
