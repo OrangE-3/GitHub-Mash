@@ -1,6 +1,7 @@
 package com.orange.githubmash;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
