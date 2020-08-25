@@ -49,8 +49,8 @@ public class GitRepoRepository {
         tokentype=mPreferences.getString("TOKEN_TYPE", "");
         LocalDatabase db = LocalDatabase.getDatabase(application);
         localGitRepoDao =db.repoDao();
-        this.favreps = localGitRepoDao.getmyReps(entry_owner+"#@localfav");
-        this.myrepslocal= localGitRepoDao.getmyReps(entry_owner+"#@localmine");
+        this.favreps = localGitRepoDao.getmyReps(entry_owner+GlobalFields.localfav);
+        this.myrepslocal= localGitRepoDao.getmyReps(entry_owner+GlobalFields.localmin);
     }
 
 
@@ -114,7 +114,7 @@ public class GitRepoRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mTaskDao.deletereps(entry_owner+"#@localmine");
+            mTaskDao.deletereps(entry_owner+GlobalFields.localmin);
             return null;
         }
     }
@@ -134,7 +134,7 @@ public class GitRepoRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mTaskDao.deletereps(entry_owner+"#@localfav");
+            mTaskDao.deletereps(entry_owner+GlobalFields.localfav);
             return null;
         }
     }

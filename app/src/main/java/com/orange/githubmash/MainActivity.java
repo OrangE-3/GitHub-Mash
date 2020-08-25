@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel mViewModel;
     private AppBarConfiguration mAppBarConfiguration;
     FloatingActionButton fab, fabsearchuser, fabsearchrepostory;
-    Float translationY = 100f;
+    private static final Float translationY = 100f;
     OvershootInterpolator interpolator = new OvershootInterpolator();
     Boolean isMenuOpen = false;
-    public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 1;
-    public static final int NEW_REP_ACTIVITY_REQUEST_CODE = 2;
+    private static final int NEW_USER_ACTIVITY_REQUEST_CODE = 1;
+    private static final int NEW_REP_ACTIVITY_REQUEST_CODE = 2;
     private SharedPreferences mPreferences;
     private TextView g;
     private TextView h;
@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
        mViewModel= ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mPreferences = getSharedPreferences(GlobalFields.sharedPrefFile,MODE_PRIVATE);
        mAppBarConfiguration = new AppBarConfiguration.Builder(

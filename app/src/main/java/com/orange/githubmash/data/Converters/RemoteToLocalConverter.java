@@ -23,13 +23,13 @@ public class RemoteToLocalConverter
 
     public LocalGitRepoModel LocalRep (RemoteGitRepoModel remote)
     {
-        String entry_owner = mPreferences.getString("USER_NAME", "")+"#@localmine";
+        String entry_owner = mPreferences.getString("USER_NAME", "")+GlobalFields.localmin;
         LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
         return g;
     }
     public LocalGitRepoModel LocalRepfav (RemoteGitRepoModel remote)
     {
-        String entry_owner = mPreferences.getString("USER_NAME", "")+"#@localfav";
+        String entry_owner = mPreferences.getString("USER_NAME", "")+GlobalFields.localfav;
         LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
         return g;
     }
