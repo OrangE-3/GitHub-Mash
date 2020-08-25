@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.Converters.RemoteToLocalConverter;
-import com.orange.githubmash.data.local.LocalGitRepoModel;
-import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.ui.adapters.LocalOwnerListAdapter;
 import com.orange.githubmash.utils.ItemClickSupport;
@@ -36,7 +33,7 @@ import java.util.List;
 public class FavOwnersFragment extends Fragment {
     /* access modifiers changed from: private */
     public static FavOwnersViewModel favUserViewModel;
-    private static Boolean isExecuted=false;
+    public static Boolean isExecuted=false;
     private NetworkInfo networkInfo;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private LocalOwnerListAdapter adapter;
@@ -115,7 +112,6 @@ public class FavOwnersFragment extends Fragment {
     private void initialise()
     {
         isExecuted=true;
-        Log.i("fsaf","fsafsafsafsdgsda");
         favUserViewModel.deleteAll();
 
         favUserViewModel.getFavOwnersRemote().observe(getViewLifecycleOwner(), new Observer<List<RemoteOwner>>() {

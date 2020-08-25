@@ -37,7 +37,7 @@ public class FavGitRepoFragment extends Fragment {
     public static FavGitRepoViewModel favGitRepoViewModel;
     private LocalGitRepoListAdapter adapter;
     private SharedPreferences mPreferences;
-    private static Boolean isExecuted=false;
+    public static Boolean isExecuted=false;
     private NetworkInfo networkInfo;
     SwipeRefreshLayout mSwipeRefreshLayout;
 

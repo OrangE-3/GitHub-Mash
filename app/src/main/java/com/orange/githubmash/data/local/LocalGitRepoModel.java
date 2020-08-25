@@ -3,7 +3,6 @@ package com.orange.githubmash.data.local;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 @Entity(primaryKeys = {"entry_owner","name","owner"})
 public class LocalGitRepoModel {

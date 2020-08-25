@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -180,6 +179,7 @@ public class GitRepoRepository {
             }
 
             public void onFailure(Call<RemoteGitRepoResponse> call, Throwable t) {
+                call.clone().enqueue(this);
             }
         });
     }
@@ -201,11 +201,11 @@ public class GitRepoRepository {
         client.starrepo(tokentype+" "+token,repository.getOwner(),repository.getName()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i("fdsfs","Fasfa");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                call.clone().enqueue(this);
             }
         });
     }
@@ -214,11 +214,11 @@ public class GitRepoRepository {
         client.unstarrepo(tokentype+" "+token,repository.getOwner(),repository.getName()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i("fdsfs","Fasfa");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                call.clone().enqueue(this);
             }
         });
     }

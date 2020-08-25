@@ -3,32 +3,28 @@ package com.orange.githubmash.data.Repositories;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.orange.githubmash.data.local.LocalDatabase;
-import com.orange.githubmash.data.local.LocalGitRepoDao;
 import com.orange.githubmash.data.local.LocalOwner;
 import com.orange.githubmash.data.local.LocalOwnerDao;
 import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.GitHubService;
 import com.orange.githubmash.data.remote.OwnerResponse;
-import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.utils.fields.GlobalFields;
 
-import java.security.PrivateKey;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit.Builder;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OwnerRepository {
     private LiveData<List<LocalOwner>> favusers;
-    private MutableLiveData<List<RemoteOwner> > favownersremote=new MutableLiveData<>(null);
+    private MutableLiveData<List<RemoteOwner>> favownersremote = new MutableLiveData<>(null);
     public SharedPreferences mPreferences;
     public MutableLiveData<List<RemoteOwner>> searchresults = new MutableLiveData<>(null);
     private LocalOwnerDao localOwnerDao;
@@ -39,27 +35,27 @@ public class OwnerRepository {
     String tokentype;
 
     public void favinsertHelper(LocalOwner localOwner) {
-        client.staruser(tokentype+" "+token,localOwner.getLogin()).enqueue(new Callback<Void>() {
+        client.staruser(tokentype + " " + token, localOwner.getLogin()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i("fdsfs","Fasfa");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                call.clone().enqueue(this);
             }
         });
     }
 
     public void favdeleteHelper(LocalOwner localOwner) {
-        client.unstaruser(tokentype+" "+token,localOwner.getLogin()).enqueue(new Callback<Void>() {
+        client.unstaruser(tokentype + " " + token, localOwner.getLogin()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i("fdsfs","Fasfa");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                call.clone().enqueue(this);
             }
         });
     }
@@ -68,8 +64,7 @@ public class OwnerRepository {
         new deleteallfavstask(this.localOwnerDao).execute();
     }
 
-    private static class deleteallfavstask extends AsyncTask<Void,Void,Void>
-    {
+    private static class deleteallfavstask extends AsyncTask<Void, Void, Void> {
         private LocalOwnerDao mTaskDao;
 
         deleteallfavstask(LocalOwnerDao dao) {
@@ -84,13 +79,13 @@ public class OwnerRepository {
     }
 
     public LiveData<List<RemoteOwner>> getFavOwnersRemote() {
-        favownersremote=new MutableLiveData<>(null);
+        favownersremote = new MutableLiveData<>(null);
         Favownershelper();
         return favownersremote;
     }
 
     private void Favownershelper() {
-        Call<List<RemoteOwner>> atc = client.userfavs(tokentype+" "+token);
+        Call<List<RemoteOwner>> atc = client.userfavs(tokentype + " " + token);
         atc.enqueue(new Callback<List<RemoteOwner>>() {
 
             public void onResponse(Call<List<RemoteOwner>> call, Response<List<RemoteOwner>> response) {
@@ -132,17 +127,16 @@ public class OwnerRepository {
     }
 
     public OwnerRepository(Application application) {
-        gitHubService=new GitHubService(GlobalFields.GitHubApiUrl);
-        client=gitHubService.getService();
-        mPreferences= application.getSharedPreferences(GlobalFields.sharedPrefFile, 0);
+        gitHubService = new GitHubService(GlobalFields.GitHubApiUrl);
+        client = gitHubService.getService();
+        mPreferences = application.getSharedPreferences(GlobalFields.sharedPrefFile, 0);
         entry_owner = mPreferences.getString("USER_NAME", "");
         token = mPreferences.getString("TOKEN_NAME", "");
-        tokentype=mPreferences.getString("TOKEN_TYPE", "");
+        tokentype = mPreferences.getString("TOKEN_TYPE", "");
         LocalOwnerDao localOwnerDao2 = LocalDatabase.getDatabase(application).userDao();
         this.localOwnerDao = localOwnerDao2;
         this.favusers = localOwnerDao2.getmyUsers(entry_owner);
     }
-
 
 
     private void searchusers(String query) {

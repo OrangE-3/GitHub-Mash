@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.orange.githubmash.data.Repositories.OwnerRepository;
 import com.orange.githubmash.data.local.LocalOwner;
-import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.data.remote.RemoteOwner;
 
 import java.util.List;

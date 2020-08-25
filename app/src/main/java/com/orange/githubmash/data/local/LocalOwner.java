@@ -2,7 +2,6 @@ package com.orange.githubmash.data.local;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 @Entity(primaryKeys = {"owner","login"})
 public class LocalOwner {

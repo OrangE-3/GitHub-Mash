@@ -35,7 +35,7 @@ public class MyGitRepoFragment extends Fragment
     SwipeRefreshLayout mSwipeRefreshLayout;
     private MyGitRepoViewModel mRepoViewModel;
     private NetworkInfo networkInfo;
-    private static Boolean isExecuted=false;
+    public static Boolean isExecuted=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
