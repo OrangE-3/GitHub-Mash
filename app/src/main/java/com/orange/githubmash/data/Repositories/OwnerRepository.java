@@ -31,39 +31,65 @@ public class OwnerRepository {
     private GitHubService gitHubService;
     private GitHubClient client;
     private String entry_owner;
-    String token;
-    String tokentype;
+    private String token;
+    private String tokentype;
 
-    public void favinsertHelper(LocalOwner localOwner) {
-        client.staruser(tokentype + " " + token, localOwner.getLogin()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                call.clone().enqueue(this);
-            }
-        });
+    public OwnerRepository(Application application) {
+        gitHubService = new GitHubService(GlobalFields.GitHubApiUrl);
+        client = gitHubService.getService();
+        mPreferences = application.getSharedPreferences(GlobalFields.sharedPrefFile, 0);
+        entry_owner = mPreferences.getString("USER_NAME", "");
+        token = mPreferences.getString("TOKEN_NAME", "");
+        tokentype = mPreferences.getString("TOKEN_TYPE", "");
+        LocalOwnerDao localOwnerDao2 = LocalDatabase.getDatabase(application).userDao();
+        this.localOwnerDao = localOwnerDao2;
+        this.favusers = localOwnerDao2.getmyUsers(entry_owner);
     }
 
-    public void favdeleteHelper(LocalOwner localOwner) {
-        client.unstaruser(tokentype + " " + token, localOwner.getLogin()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                call.clone().enqueue(this);
-            }
-        });
+    public LiveData<List<LocalOwner>> getmyfavusers() {
+        return this.favusers;
     }
+
+
+    public void insert(LocalOwner localOwner) {
+        new inserttask(this.localOwnerDao).execute(new LocalOwner[]{localOwner});
+    }
+    private static class inserttask extends AsyncTask<LocalOwner, Void, Void> {
+        private LocalOwnerDao mTaskDao;
+
+        inserttask(LocalOwnerDao dao) {
+            this.mTaskDao = dao;
+        }
+
+        /* access modifiers changed from: protected */
+        public Void doInBackground(LocalOwner... localOwners) {
+            this.mTaskDao.insert(localOwners[0]);
+            return null;
+        }
+    }
+
+
+    public void delete(LocalOwner localOwner) {
+        new deletetask(this.localOwnerDao).execute(new LocalOwner[]{localOwner});
+    }
+    private static class deletetask extends AsyncTask<LocalOwner, Void, Void> {
+        private LocalOwnerDao mTaskDao;
+
+        deletetask(LocalOwnerDao dao) {
+            this.mTaskDao = dao;
+        }
+
+        public Void doInBackground(LocalOwner... localOwners) {
+            this.mTaskDao.deleteuser(localOwners[0]);
+            return null;
+        }
+    }
+
 
     public void deleteallfavs() {
         new deleteallfavstask(this.localOwnerDao).execute();
     }
-
     private static class deleteallfavstask extends AsyncTask<Void, Void, Void> {
         private LocalOwnerDao mTaskDao;
 
@@ -78,12 +104,12 @@ public class OwnerRepository {
         }
     }
 
+
     public LiveData<List<RemoteOwner>> getFavOwnersRemote() {
         favownersremote = new MutableLiveData<>(null);
         Favownershelper();
         return favownersremote;
     }
-
     private void Favownershelper() {
         Call<List<RemoteOwner>> atc = client.userfavs(tokentype + " " + token);
         atc.enqueue(new Callback<List<RemoteOwner>>() {
@@ -99,46 +125,11 @@ public class OwnerRepository {
         });
     }
 
-    private static class deletetask extends AsyncTask<LocalOwner, Void, Void> {
-        private LocalOwnerDao mTaskDao;
 
-        deletetask(LocalOwnerDao dao) {
-            this.mTaskDao = dao;
-        }
-
-        public Void doInBackground(LocalOwner... localOwners) {
-            this.mTaskDao.deleteuser(localOwners[0]);
-            return null;
-        }
+    public MutableLiveData<List<RemoteOwner>> usersearchresults(String query) {
+        searchusers(query);
+        return this.searchresults;
     }
-
-    private static class inserttask extends AsyncTask<LocalOwner, Void, Void> {
-        private LocalOwnerDao mTaskDao;
-
-        inserttask(LocalOwnerDao dao) {
-            this.mTaskDao = dao;
-        }
-
-        /* access modifiers changed from: protected */
-        public Void doInBackground(LocalOwner... localOwners) {
-            this.mTaskDao.insert(localOwners[0]);
-            return null;
-        }
-    }
-
-    public OwnerRepository(Application application) {
-        gitHubService = new GitHubService(GlobalFields.GitHubApiUrl);
-        client = gitHubService.getService();
-        mPreferences = application.getSharedPreferences(GlobalFields.sharedPrefFile, 0);
-        entry_owner = mPreferences.getString("USER_NAME", "");
-        token = mPreferences.getString("TOKEN_NAME", "");
-        tokentype = mPreferences.getString("TOKEN_TYPE", "");
-        LocalOwnerDao localOwnerDao2 = LocalDatabase.getDatabase(application).userDao();
-        this.localOwnerDao = localOwnerDao2;
-        this.favusers = localOwnerDao2.getmyUsers(entry_owner);
-    }
-
-
     private void searchusers(String query) {
         client.getUserList(query).enqueue(new Callback<OwnerResponse>() {
             public void onResponse(Call<OwnerResponse> call, Response<OwnerResponse> response) {
@@ -153,20 +144,31 @@ public class OwnerRepository {
         });
     }
 
-    public MutableLiveData<List<RemoteOwner>> usersearchresults(String query) {
-        searchusers(query);
-        return this.searchresults;
+
+    public void favinsertHelper(LocalOwner localOwner) {
+        client.staruser(tokentype + " " + token, localOwner.getLogin()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
     }
 
-    public LiveData<List<LocalOwner>> getmyfavusers() {
-        return this.favusers;
-    }
 
-    public void insert(LocalOwner localOwner) {
-        new inserttask(this.localOwnerDao).execute(new LocalOwner[]{localOwner});
-    }
+    public void favdeleteHelper(LocalOwner localOwner) {
+        client.unstaruser(tokentype + " " + token, localOwner.getLogin()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
 
-    public void delete(LocalOwner localOwner) {
-        new deletetask(this.localOwnerDao).execute(new LocalOwner[]{localOwner});
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
     }
 }

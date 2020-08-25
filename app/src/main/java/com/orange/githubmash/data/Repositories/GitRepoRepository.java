@@ -28,100 +28,16 @@ import retrofit2.Response;
 public class GitRepoRepository {
     private LiveData<List<LocalGitRepoModel> > favreps;
     private MutableLiveData<List<RemoteGitRepoModel> > favrepsremote=new MutableLiveData<>(null);
-    private SharedPreferences mPreferences;
+    private MutableLiveData<List<RemoteGitRepoModel> > searchresults = new MutableLiveData<>(null);
     private MutableLiveData<List<RemoteGitRepoModel> > myreps = new MutableLiveData<>(null);
     private LiveData<List<LocalGitRepoModel> > myrepslocal;
+    private SharedPreferences mPreferences;
     private LocalGitRepoDao localGitRepoDao;
     private GitHubService gitHubService;
     private static String entry_owner;
     private GitHubClient client;
-    String token;
-    String tokentype;
-
-    private MutableLiveData<List<RemoteGitRepoModel> > searchresults = new MutableLiveData<>(null);
-    public LiveData<List<RemoteGitRepoModel> >getMyRepsremote()
-    {
-        myreps=new MutableLiveData<>(null);
-        Myrepshelper();
-        return myreps;
-    }
-    public LiveData<List<LocalGitRepoModel> > getmyownrepslocally()
-    {
-        return myrepslocal;
-    }
-
-    public LiveData<List<RemoteGitRepoModel>> getFavRepsremote() {
-        favrepsremote=new MutableLiveData<>(null);
-        Favrepshelper();
-        return favrepsremote;
-    }
-
-    public void deleteallfavs()
-    {
-        new deleteallfavstask(this.localGitRepoDao).execute();
-    }
-
-    public void deleteallmine() {
-        new deleteallminetask(this.localGitRepoDao).execute();
-    }
-
-    private static class deleteallminetask extends AsyncTask<Void,Void,Void>
-    {
-        private LocalGitRepoDao mTaskDao;
-
-        deleteallminetask(LocalGitRepoDao dao) {
-            mTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mTaskDao.deletereps(entry_owner+"#@localmine");
-            return null;
-        }
-    }
-
-    private static class deleteallfavstask extends AsyncTask<Void,Void,Void>
-    {
-        private LocalGitRepoDao mTaskDao;
-
-        deleteallfavstask(LocalGitRepoDao dao) {
-            mTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mTaskDao.deletereps(entry_owner+"#@localfav");
-            return null;
-        }
-    }
-
-    private static class deletetask extends AsyncTask<LocalGitRepoModel, Void, Void> {
-        private LocalGitRepoDao mTaskDao;
-
-        deletetask(LocalGitRepoDao dao) {
-            mTaskDao = dao;
-        }
-
-        /* access modifiers changed from: protected */
-        protected Void doInBackground(LocalGitRepoModel... reps) {
-            mTaskDao.deleterep(reps[0].getEntry_owner(),reps[0].getName(),reps[0].getOwner());
-            return null;
-        }
-    }
-
-    private static class inserttask extends AsyncTask<LocalGitRepoModel, Void, Void> {
-        private LocalGitRepoDao mTaskDao;
-
-        inserttask(LocalGitRepoDao dao) {
-            mTaskDao = dao;
-        }
-
-        /* access modifiers changed from: protected */
-        protected Void doInBackground(LocalGitRepoModel... gitHubRepositories) {
-            mTaskDao.insert(gitHubRepositories[0]);
-            return null;
-        }
-    }
+    private String token;
+    private String tokentype;
 
     public GitRepoRepository(Application application)
     {
@@ -137,6 +53,99 @@ public class GitRepoRepository {
         this.myrepslocal= localGitRepoDao.getmyReps(entry_owner+"#@localmine");
     }
 
+
+    public LiveData<List<LocalGitRepoModel> > getmyownrepslocally()
+    {
+        return myrepslocal;
+    }
+
+
+    public LiveData<List<LocalGitRepoModel>> getmyfavreps() {
+        return this.favreps;
+    }
+
+
+    public void insert(LocalGitRepoModel repository) {
+        new inserttask(this.localGitRepoDao).execute(repository);
+    }
+    private static class inserttask extends AsyncTask<LocalGitRepoModel, Void, Void> {
+        private LocalGitRepoDao mTaskDao;
+
+        inserttask(LocalGitRepoDao dao) {
+            mTaskDao = dao;
+        }
+
+        /* access modifiers changed from: protected */
+        protected Void doInBackground(LocalGitRepoModel... gitHubRepositories) {
+            mTaskDao.insert(gitHubRepositories[0]);
+            return null;
+        }
+    }
+
+
+    public void delete(LocalGitRepoModel rep) {
+        new deletetask(this.localGitRepoDao).execute(rep);
+    }
+    private static class deletetask extends AsyncTask<LocalGitRepoModel, Void, Void> {
+        private LocalGitRepoDao mTaskDao;
+
+        deletetask(LocalGitRepoDao dao) {
+            mTaskDao = dao;
+        }
+
+        /* access modifiers changed from: protected */
+        protected Void doInBackground(LocalGitRepoModel... reps) {
+            mTaskDao.deleterep(reps[0].getEntry_owner(),reps[0].getName(),reps[0].getOwner());
+            return null;
+        }
+    }
+
+
+    public void deleteallmine() {
+        new deleteallminetask(this.localGitRepoDao).execute();
+    }
+    private static class deleteallminetask extends AsyncTask<Void,Void,Void>
+    {
+        private LocalGitRepoDao mTaskDao;
+
+        deleteallminetask(LocalGitRepoDao dao) {
+            mTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mTaskDao.deletereps(entry_owner+"#@localmine");
+            return null;
+        }
+    }
+
+
+    public void deleteallfavs()
+    {
+        new deleteallfavstask(this.localGitRepoDao).execute();
+    }
+    private static class deleteallfavstask extends AsyncTask<Void,Void,Void>
+    {
+        private LocalGitRepoDao mTaskDao;
+
+        deleteallfavstask(LocalGitRepoDao dao) {
+            mTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mTaskDao.deletereps(entry_owner+"#@localfav");
+            return null;
+        }
+    }
+
+
+    public LiveData<List<RemoteGitRepoModel> >getMyRepsremote()
+    {
+        myreps=new MutableLiveData<>(null);
+        Myrepshelper();
+        return myreps;
+    }
     private void Myrepshelper() {
         String token = mPreferences.getString("TOKEN_NAME", "");
         String tokentype = this.mPreferences.getString("TOKEN_TYPE", "");
@@ -153,6 +162,12 @@ public class GitRepoRepository {
         });
     }
 
+
+    public LiveData<List<RemoteGitRepoModel>> getFavRepsremote() {
+        favrepsremote=new MutableLiveData<>(null);
+        Favrepshelper();
+        return favrepsremote;
+    }
     private void Favrepshelper() {
         Call<List<RemoteGitRepoModel>> atc = client.repfavs(tokentype+" "+token);
         atc.enqueue(new Callback<List<RemoteGitRepoModel>>() {
@@ -168,6 +183,11 @@ public class GitRepoRepository {
         });
     }
 
+
+    public MutableLiveData<List<RemoteGitRepoModel>> repsearchresults(String query) {
+        searchreps(query);
+        return this.searchresults;
+    }
     private void searchreps(String query) {
         String b=query+" in:name";
         query=b;
@@ -184,18 +204,7 @@ public class GitRepoRepository {
         });
     }
 
-    public MutableLiveData<List<RemoteGitRepoModel>> repsearchresults(String query) {
-        searchreps(query);
-        return this.searchresults;
-    }
 
-    public LiveData<List<LocalGitRepoModel>> getmyfavreps() {
-        return this.favreps;
-    }
-
-    public void insert(LocalGitRepoModel repository) {
-        new inserttask(this.localGitRepoDao).execute(repository);
-    }
     public void favinsertHelper(LocalGitRepoModel repository)
     {
         client.starrepo(tokentype+" "+token,repository.getOwner(),repository.getName()).enqueue(new Callback<Void>() {
@@ -209,6 +218,8 @@ public class GitRepoRepository {
             }
         });
     }
+
+
     public void favdeleteHelper(LocalGitRepoModel repository)
     {
         client.unstarrepo(tokentype+" "+token,repository.getOwner(),repository.getName()).enqueue(new Callback<Void>() {
@@ -223,7 +234,4 @@ public class GitRepoRepository {
         });
     }
 
-    public void delete(LocalGitRepoModel rep) {
-        new deletetask(this.localGitRepoDao).execute(rep);
-    }
 }
