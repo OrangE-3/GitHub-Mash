@@ -26,7 +26,7 @@ public interface GitHubClient
     Call<OwnerResponse> getUserList(@Query("q") String filter);
 
     @GET("/search/repositories")
-    Call<RemoteGitRepoResponse> getrepList(@Query("q") String filter);
+    Call<RemoteGitRepoResponse> getrepList(@Query("q") String filter,@Query("per_page") int per_page,@Query("sort") String sort);
 
     @GET("/user/following")
     Call< List<RemoteOwner> > userfollowing(@Header("Authorization") String token);

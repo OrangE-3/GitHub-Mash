@@ -191,7 +191,7 @@ public class GitRepoRepository {
     private void searchreps(String query) {
         String b=query+" in:name";
         query=b;
-        client.getrepList(query).enqueue(new Callback<RemoteGitRepoResponse>() {
+        client.getrepList(query,50,"stars").enqueue(new Callback<RemoteGitRepoResponse>() {
             public void onResponse(Call<RemoteGitRepoResponse> call, Response<RemoteGitRepoResponse> response) {
                 if (response.body() != null) {
                     GitRepoRepository.this.searchresults.postValue(((RemoteGitRepoResponse) response.body()).getItems());
