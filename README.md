@@ -13,3 +13,4 @@ An Android Application that lets an User add Github repositories or people to hi
 9. Api calls to Github Api using Retrofit.
 10. A Simple Splash Screen :P
 11. Search people or repositories using search bar.
+12. A navigation drawer that shows the currently logged in user and the option to logout.
