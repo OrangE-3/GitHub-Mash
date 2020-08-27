@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -30,12 +31,13 @@ public class SearchRemoteOwners extends AppCompatActivity {
     public static final String REPL_user = "com.orange.githubmash.ui.usersearch.reply.user";
     SearchRemoteOwnersViewModel searchRemoteOwnersViewModel;
     SearchView textv;
+    public static ProgressBar userbar;
     Toast toast=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_usres);
-
+        userbar=findViewById(R.id.userbar);
         RecyclerView recyclerView =findViewById(R.id.usersearchrec);
         final RemoteOwnerListAdapter adapter = new RemoteOwnerListAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -55,6 +57,7 @@ public class SearchRemoteOwners extends AppCompatActivity {
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
                     // fetch data
+                    userbar.setVisibility(View.VISIBLE);
                     searchRemoteOwnersViewModel.searchusers(query).observe(o, new Observer<List<RemoteOwner>>() {
                         @Override
                         public void onChanged(List<RemoteOwner> remoteOwners) {

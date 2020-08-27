@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -31,13 +32,14 @@ public class SearchRemoteGitRepo extends AppCompatActivity {
     public static final String REPL_watchers = "com.orange.githubmash.ui.repsearch.reply.watchers";
     Toast toast=null;
     private SearchView textv;
+    public static ProgressBar repbar;
     SearchRemoteGitRepoViewModel searchRemoteGitRepoViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_repositories);
-
-        RecyclerView recyclerView =findViewById(R.id.repsearchrec);
+        repbar=findViewById(R.id.repbar);
+        final RecyclerView recyclerView =findViewById(R.id.repsearchrec);
         final RemoteGitRepoListAdapter adapter = new RemoteGitRepoListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,19 +54,20 @@ public class SearchRemoteGitRepo extends AppCompatActivity {
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
                     // fetch data
+                    repbar.setVisibility(View.VISIBLE);
                     searchRemoteGitRepoViewModel.searchrep(query).observe(o, new Observer<List<RemoteGitRepoModel>>() {
                         @Override
                         public void onChanged(List<RemoteGitRepoModel> remoteGitRepoModels)
                         {
-                            adapter.setReps(remoteGitRepoModels);
+                                adapter.setReps(remoteGitRepoModels);
                         }
+
                     });
                 }
                 else {
                     toast.setText("You must be connected to the internet.");
                     toast.show();
                 }
-
                 return false;
             }
 
@@ -72,6 +75,8 @@ public class SearchRemoteGitRepo extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 return false;
             }
+
+
         });
 
         ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {

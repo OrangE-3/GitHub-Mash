@@ -3,6 +3,7 @@ package com.orange.githubmash.data.Repositories;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.view.View;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +15,7 @@ import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.GitHubService;
 import com.orange.githubmash.data.remote.OwnerResponse;
 import com.orange.githubmash.data.remote.RemoteOwner;
+import com.orange.githubmash.ui.ownersearch.SearchRemoteOwners;
 import com.orange.githubmash.utils.fields.GlobalFields;
 
 import java.util.List;
@@ -136,6 +138,7 @@ public class OwnerRepository {
                 if (response.body() != null) {
                     List<RemoteOwner> p = ((OwnerResponse) response.body()).getItems();
                     OwnerRepository.this.searchresults.postValue(p);
+                    SearchRemoteOwners.userbar.setVisibility(View.GONE);
                 }
             }
 

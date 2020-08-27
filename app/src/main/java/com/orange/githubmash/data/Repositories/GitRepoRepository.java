@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.view.View;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -16,6 +17,7 @@ import com.orange.githubmash.data.remote.GitHubClient;
 import com.orange.githubmash.data.remote.GitHubService;
 import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.data.remote.RemoteGitRepoResponse;
+import com.orange.githubmash.ui.repsearch.SearchRemoteGitRepo;
 import com.orange.githubmash.utils.fields.GlobalFields;
 
 
@@ -195,6 +197,7 @@ public class GitRepoRepository {
             public void onResponse(Call<RemoteGitRepoResponse> call, Response<RemoteGitRepoResponse> response) {
                 if (response.body() != null) {
                     GitRepoRepository.this.searchresults.postValue(((RemoteGitRepoResponse) response.body()).getItems());
+                    SearchRemoteGitRepo.repbar.setVisibility(View.GONE);
                 }
             }
 

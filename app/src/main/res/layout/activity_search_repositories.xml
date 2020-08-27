@@ -4,30 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".ui.repsearch.SearchRemoteGitRepo">
 
     <SearchView
         android:id="@+id/repsearchbut"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search Repositories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:queryHint="Search Repositories"
-        android:iconifiedByDefault="false"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/repsearchrec"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repsearchbut"
-        tools:listitem="@layout/myrepitem" /><![CDATA[
+        app:layout_constraintTop_toBottomOf="@+id/repbar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/myrepitem" />
 
-    />
-]]>
+    <ProgressBar
+        android:id="@+id/repbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repsearchbut" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

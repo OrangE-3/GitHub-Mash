@@ -103,13 +103,16 @@ public class FavOwnersFragment extends Fragment {
                                     LocalOwner g = converter.LocalOwnerfav(remoteOwners.get(i),i);
                                     favUserViewModel.insert(g);
                                 }
+                                mSwipeRefreshLayout.setRefreshing(false);
                             }
+
                         }
                     });
                 } else {
                     Toast.makeText(getContext(),"To Refresh your favorite Users, You must be connected to the internet.",Toast.LENGTH_SHORT).show();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
-                mSwipeRefreshLayout.setRefreshing(false);
+
             }
         });
 
