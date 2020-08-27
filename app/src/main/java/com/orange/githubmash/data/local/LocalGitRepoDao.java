@@ -25,10 +25,10 @@ public interface LocalGitRepoDao {
     @Query("SELECT * from LocalGitRepoModel")
     LiveData<List<LocalGitRepoModel>> getAllRepos();
 
-    @Query("SELECT * from LocalGitRepoModel where entry_owner=(:str)")
+    @Query("SELECT * from LocalGitRepoModel where entry_owner=(:str) ORDER BY id ASC")
     LiveData<List<LocalGitRepoModel>> getmyReps(String str);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(LocalGitRepoModel localGitRepoModel);
 
 }

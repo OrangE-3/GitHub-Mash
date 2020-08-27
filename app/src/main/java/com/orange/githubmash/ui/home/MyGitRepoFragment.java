@@ -89,7 +89,7 @@ public class MyGitRepoFragment extends Fragment
                             if(remoteGitRepoModels !=null) {
                                 RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                                 for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
-                                    LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i));
+                                    LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i),i);
                                     mRepoViewModel.insert(g);
                                 }
                             }
@@ -115,7 +115,7 @@ public class MyGitRepoFragment extends Fragment
                         if(remoteGitRepoModels !=null) {
                             RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                             for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
-                                LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i));
+                                LocalGitRepoModel g = converter.LocalRep(remoteGitRepoModels.get(i),i);
                                 mRepoViewModel.insert(g);
                             }
                         }

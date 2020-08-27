@@ -6,6 +6,7 @@ import androidx.room.Entity;
 @Entity(primaryKeys = {"owner","login"})
 public class LocalOwner {
 
+    private int id;
     private String avatar_url;
     @NonNull
     private String login;
@@ -13,11 +14,12 @@ public class LocalOwner {
     private String owner;
     private String url;
 
-    public LocalOwner(String owner, String login, String url, String avatar_url) {
+    public LocalOwner(String owner, String login, String url, String avatar_url,int id) {
         this.avatar_url = avatar_url;
         this.login = login;
         this.owner = owner;
         this.url = url;
+        this.id=id;
     }
 
     public String getLogin() {
@@ -45,6 +47,9 @@ public class LocalOwner {
         this.login = login2;
     }
 
+    public int getId() {
+        return id;
+    }
     public void setUrl(String url2) {
         this.url = url2;
     }

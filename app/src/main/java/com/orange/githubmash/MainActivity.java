@@ -217,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
         String entry_owner = mPreferences.getString("USER_NAME", "");
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            FavOwnersFragment.favUserViewModel.insert(new LocalOwner(entry_owner, data.getStringExtra(SearchRemoteOwners.REPL_user), data.getStringExtra(SearchRemoteOwners.REPL_url), data.getStringExtra(SearchRemoteOwners.REPL_avatar)));
+            FavOwnersFragment.favUserViewModel.insert(new LocalOwner(entry_owner, data.getStringExtra(SearchRemoteOwners.REPL_user), data.getStringExtra(SearchRemoteOwners.REPL_url), data.getStringExtra(SearchRemoteOwners.REPL_avatar),-1));
                 Toast.makeText(getApplicationContext(),"User named: "+data.getStringExtra(SearchRemoteOwners.REPL_user)+" added!",Toast.LENGTH_SHORT).show();
         } else if (requestCode == NEW_REP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            LocalGitRepoModel localGitRepoModel = new LocalGitRepoModel(entry_owner+GlobalFields.localfav, data.getStringExtra(SearchRemoteGitRepo.REPL_owner), data.getStringExtra(SearchRemoteGitRepo.REPL_name), data.getStringExtra(SearchRemoteGitRepo.REPL_description), data.getStringExtra(SearchRemoteGitRepo.REPL_url), data.getIntExtra(SearchRemoteGitRepo.REPL_watchers, 0));
+            LocalGitRepoModel localGitRepoModel = new LocalGitRepoModel(entry_owner+GlobalFields.localfav, data.getStringExtra(SearchRemoteGitRepo.REPL_owner), data.getStringExtra(SearchRemoteGitRepo.REPL_name), data.getStringExtra(SearchRemoteGitRepo.REPL_description), data.getStringExtra(SearchRemoteGitRepo.REPL_url), data.getIntExtra(SearchRemoteGitRepo.REPL_watchers, 0),-1);
             FavGitRepoFragment.favGitRepoViewModel.insert(localGitRepoModel);
             Toast.makeText(getApplicationContext(),"Repository named: "+data.getStringExtra(SearchRemoteGitRepo.REPL_name)+" added!",Toast.LENGTH_SHORT).show();
         } else {

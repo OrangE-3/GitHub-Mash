@@ -21,22 +21,23 @@ public class RemoteToLocalConverter
         this.mPreferences = context.getSharedPreferences(GlobalFields.sharedPrefFile, MODE_PRIVATE);
     }
 
-    public LocalGitRepoModel LocalRep (RemoteGitRepoModel remote)
+    public LocalGitRepoModel LocalRep (RemoteGitRepoModel remote,int i)
     {
         String entry_owner = mPreferences.getString("USER_NAME", "")+GlobalFields.localmin;
-        LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
+        LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers(),i);
         return g;
     }
-    public LocalGitRepoModel LocalRepfav (RemoteGitRepoModel remote)
+    public LocalGitRepoModel LocalRepfav (RemoteGitRepoModel remote,int i)
     {
+
         String entry_owner = mPreferences.getString("USER_NAME", "")+GlobalFields.localfav;
-        LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers());
+        LocalGitRepoModel g=new LocalGitRepoModel(entry_owner,remote.getOwner().getLogin(),remote.getmName(),remote.getmDescription(),remote.getmUrl(),remote.getmWatchers(),i);
         return g;
     }
-    public LocalOwner LocalOwnerfav (RemoteOwner remote)
+    public LocalOwner LocalOwnerfav (RemoteOwner remote,int i)
     {
         String entry_owner = mPreferences.getString("USER_NAME", "");
-        LocalOwner g=new LocalOwner(entry_owner,remote.getLogin(),remote.getHtmlUrl(),remote.getAvatarUrl());
+        LocalOwner g=new LocalOwner(entry_owner,remote.getLogin(),remote.getHtmlUrl(),remote.getAvatarUrl(),i);
         return g;
     }
     public List<LocalGitRepoModel> LocalRepList (List<RemoteGitRepoModel> remote)
@@ -44,7 +45,7 @@ public class RemoteToLocalConverter
         List<LocalGitRepoModel> l=new ArrayList<LocalGitRepoModel>(null);
         for(int i=0;i<remote.size();++i)
         {
-            l.add(LocalRep(remote.get(i)));
+            l.add(LocalRep(remote.get(i),i));
         }
         return l;
     }
@@ -53,7 +54,7 @@ public class RemoteToLocalConverter
         List<LocalGitRepoModel> l=new ArrayList<LocalGitRepoModel>();
         for(int i=0;i<remote.size();++i)
         {
-            l.add(LocalRepfav(remote.get(i)));
+            l.add(LocalRepfav(remote.get(i),i));
         }
         return l;
     }

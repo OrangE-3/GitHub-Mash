@@ -64,4 +64,5 @@ public class RemoteOwner implements Parcelable {
         dest.writeString(this.avatarUrl);
         dest.writeString(this.htmlUrl);
     }
+
 }

@@ -17,7 +17,7 @@ import retrofit2.http.Query;
 public interface GitHubClient
 {
     @GET("/user/repos")
-    Call< List<RemoteGitRepoModel> > userreps(@Header("Authorization") String token);
+    Call< List<RemoteGitRepoModel> > userreps(@Header("Authorization") String token,@Query("sort") String sort);
 
     @GET("/user")
     Call< RemoteOwner > userdata(@Header("Authorization") String token);

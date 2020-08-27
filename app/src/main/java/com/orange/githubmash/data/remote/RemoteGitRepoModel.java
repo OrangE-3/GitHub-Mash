@@ -32,6 +32,7 @@ public class RemoteGitRepoModel implements Parcelable {
     @Expose
     private RemoteOwner owner;
 
+
     public RemoteGitRepoModel(Parcel in) {
         this.mDescription = in.readString();
         this.mName = in.readString();
@@ -63,6 +64,7 @@ public class RemoteGitRepoModel implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
 
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.mDescription);

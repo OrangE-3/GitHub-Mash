@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class FavGitRepoFragment extends Fragment {
 
         favGitRepoViewModel.getMyRepos().observe(getViewLifecycleOwner(), new Observer<List<LocalGitRepoModel>>() {
             public void onChanged(List<LocalGitRepoModel> reps) {
+
                 adapter.setReps(reps);
             }
         });
@@ -98,7 +100,7 @@ public class FavGitRepoFragment extends Fragment {
                             if(remoteGitRepoModels !=null) {
                                 RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                                 for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
-                                    LocalGitRepoModel g = converter.LocalRepfav(remoteGitRepoModels.get(i));
+                                    LocalGitRepoModel g = converter.LocalRepfav(remoteGitRepoModels.get(i),i);
                                     favGitRepoViewModel.insert(g);
                                 }
                             }
@@ -125,7 +127,7 @@ public class FavGitRepoFragment extends Fragment {
                 if(remoteGitRepoModels !=null) {
                     RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                     for (int i = 0; i < remoteGitRepoModels.size(); ++i) {
-                        LocalGitRepoModel g = converter.LocalRepfav(remoteGitRepoModels.get(i));
+                        LocalGitRepoModel g = converter.LocalRepfav(remoteGitRepoModels.get(i),i);
                         favGitRepoViewModel.insert(g);
                     }
                 }

@@ -149,7 +149,7 @@ public class GitRepoRepository {
     private void Myrepshelper() {
         String token = mPreferences.getString("TOKEN_NAME", "");
         String tokentype = this.mPreferences.getString("TOKEN_TYPE", "");
-        Call<List<RemoteGitRepoModel>> atc = client.userreps(tokentype+" "+token);
+        Call<List<RemoteGitRepoModel>> atc = client.userreps(tokentype+" "+token,"updated");
         atc.enqueue(new Callback<List<RemoteGitRepoModel>>() {
 
             public void onResponse(Call<List<RemoteGitRepoModel>> call, Response<List<RemoteGitRepoModel>> response) {

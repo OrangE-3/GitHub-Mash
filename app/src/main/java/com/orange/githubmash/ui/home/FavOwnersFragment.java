@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,13 @@ public class FavOwnersFragment extends Fragment {
 
         favUserViewModel.getMyUsers().observe(getViewLifecycleOwner(), new Observer<List<LocalOwner>>() {
             public void onChanged(List<LocalOwner> localOwners) {
+                if(localOwners!=null)
+                {
+                    for(int i=0;i<localOwners.size();++i)
+                    {
+                        Log.i(localOwners.get(i).getOwner(),localOwners.get(i).getLogin()+" : "+i);
+                    }
+                }
                 adapter.setUsers(localOwners);
             }
         });
@@ -92,7 +100,7 @@ public class FavOwnersFragment extends Fragment {
                             if(remoteOwners !=null) {
                                 RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                                 for (int i = 0; i < remoteOwners.size(); ++i) {
-                                    LocalOwner g = converter.LocalOwnerfav(remoteOwners.get(i));
+                                    LocalOwner g = converter.LocalOwnerfav(remoteOwners.get(i),i);
                                     favUserViewModel.insert(g);
                                 }
                             }
@@ -121,7 +129,7 @@ public class FavOwnersFragment extends Fragment {
                 if(remoteOwners !=null) {
                     RemoteToLocalConverter converter = new RemoteToLocalConverter(requireContext());
                     for (int i = 0; i < remoteOwners.size(); ++i) {
-                        LocalOwner g = converter.LocalOwnerfav(remoteOwners.get(i));
+                        LocalOwner g = converter.LocalOwnerfav(remoteOwners.get(i),i);
                         favUserViewModel.insert(g);
                     }
                 }

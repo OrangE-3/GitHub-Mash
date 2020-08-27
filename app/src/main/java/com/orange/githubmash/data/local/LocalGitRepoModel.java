@@ -2,11 +2,13 @@ package com.orange.githubmash.data.local;
 
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 @Entity(primaryKeys = {"entry_owner","name","owner"})
 public class LocalGitRepoModel {
 
+    private int id;
     private String description;
     @NonNull
     private String entry_owner;
@@ -17,13 +19,14 @@ public class LocalGitRepoModel {
     private String url;
     private Integer watchers;
 
-    public LocalGitRepoModel(String entry_owner, String owner, String name, String description, String url, Integer watchers) {
+    public LocalGitRepoModel(String entry_owner, String owner, String name, String description, String url, Integer watchers, int id) {
         this.description = description;
         this.entry_owner = entry_owner;
         this.name = name;
         this.owner = owner;
         this.url = url;
         this.watchers = watchers;
+        this.id=id;
     }
 
     public String getOwner() {
@@ -50,5 +53,7 @@ public class LocalGitRepoModel {
         return this.entry_owner;
     }
 
-
+    public int getId() {
+        return id;
+    }
 }

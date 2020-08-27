@@ -21,9 +21,9 @@ public interface LocalOwnerDao {
     @Query("SELECT * from LocalOwner")
     LiveData<List<LocalOwner>> getAllUsers();
 
-    @Query("SELECT * from LocalOwner where owner=(:str)")
+    @Query("SELECT * from LocalOwner where owner=(:str) ORDER BY id ASC")
     LiveData<List<LocalOwner>> getmyUsers(String str);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(LocalOwner localOwner);
 }
