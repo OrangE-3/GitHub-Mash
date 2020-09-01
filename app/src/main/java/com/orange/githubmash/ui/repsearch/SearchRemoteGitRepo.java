@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.orange.githubmash.ui.web.WebActivity;
 import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteGitRepoModel;
@@ -94,7 +95,16 @@ public class SearchRemoteGitRepo extends AppCompatActivity {
             }
         }).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                SearchRemoteGitRepo.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(adapter.getRepAtPosition(position).getmUrl())));
+                String u = adapter.getRepAtPosition(position).getmUrl();
+                StringBuilder sb = new StringBuilder();
+                sb.append(u);
+
+                Intent i =new Intent(SearchRemoteGitRepo.this, WebActivity.class);
+                i.putExtra(WebActivity.ADDRESS,sb.toString());
+                i.putExtra(WebActivity.title,adapter.getRepAtPosition(position).getmName());
+
+
+                SearchRemoteGitRepo.this.startActivity(i);
             }
         });
     }

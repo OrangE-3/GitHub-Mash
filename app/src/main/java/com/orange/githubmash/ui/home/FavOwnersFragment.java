@@ -23,6 +23,7 @@ import com.orange.githubmash.R;
 import com.orange.githubmash.data.Converters.RemoteToLocalConverter;
 import com.orange.githubmash.data.remote.RemoteOwner;
 import com.orange.githubmash.ui.adapters.LocalOwnerListAdapter;
+import com.orange.githubmash.ui.web.WebActivity;
 import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.utils.ItemClickSupport.OnItemClickListener;
 import com.orange.githubmash.utils.ItemClickSupport.OnItemLongClickListener;
@@ -80,7 +81,14 @@ public class FavOwnersFragment extends Fragment {
             }
         }).setOnItemClickListener(new OnItemClickListener() {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                FavOwnersFragment.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(adapter.getUserAtPosition(position).getUrl())));
+                String u = adapter.getUserAtPosition(position).getUrl();
+                StringBuilder sb = new StringBuilder();
+                sb.append(u);
+
+                Intent i =new Intent(getActivity(), WebActivity.class);
+                i.putExtra(WebActivity.ADDRESS,sb.toString());
+                i.putExtra(WebActivity.title,adapter.getUserAtPosition(position).getLogin());
+                FavOwnersFragment.this.startActivity(i);
             }
         });
 

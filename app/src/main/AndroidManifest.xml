@@ -12,30 +12,40 @@
         android:roundIcon="@mipmap/ic_applogo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.settings.Settings"
-            android:parentActivityName=".MainActivity"
-            android:label="Settings">
+        <activity
+            android:name=".ui.web.WebActivity"
+            android:label="Surf"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".ui.ownersearch.SearchRemoteOwners"
+        <activity
+            android:name=".ui.settings.Settings"
+            android:label="Settings"
             android:parentActivityName=".MainActivity"
-            android:label="Search Users">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity"/>
-        </activity>
-
-        <activity android:name=".ui.repsearch.SearchRemoteGitRepo"
-                android:parentActivityName=".MainActivity"
-            android:label="Search Repositories">
+            android:noHistory="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
-
+        <activity
+            android:name=".ui.ownersearch.SearchRemoteOwners"
+            android:label="Search Users"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.repsearch.SearchRemoteGitRepo"
+            android:label="Search Repositories"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

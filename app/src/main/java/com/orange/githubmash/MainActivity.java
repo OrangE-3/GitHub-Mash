@@ -6,11 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.animation.OvershootInterpolator;
+import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
+
 
 public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel mViewModel;
@@ -95,6 +100,20 @@ public class MainActivity extends AppCompatActivity {
                                     FavGitRepoFragment.isExecuted=false;
                                     MyGitRepoFragment.isExecuted=false;
                                     FavOwnersFragment.isExecuted=false;
+
+                                    android.webkit.CookieManager cookieManager = CookieManager.getInstance();
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
+                                            // a callback which is executed when the cookies have been removed
+                                            @Override
+                                            public void onReceiveValue(Boolean aBoolean) {
+                                            }
+                                        });
+                                    }
+                                    else cookieManager.removeAllCookie();
+
+
                                     startActivity(new Intent(activity, Login.class));
                                     activity.finish();
                                 }

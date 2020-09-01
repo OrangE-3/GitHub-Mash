@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.orange.githubmash.ui.adapters.LocalGitRepoListAdapter;
+import com.orange.githubmash.ui.web.WebActivity;
 import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.Converters.RemoteToLocalConverter;
@@ -63,7 +64,11 @@ public class MyGitRepoFragment extends Fragment
                         String u= localadapter.getRepAtPosition(position).getUrl();
                         StringBuilder sb = new StringBuilder();
                         sb.append(u);
-                        MyGitRepoFragment.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(sb.toString())));
+
+                        Intent i =new Intent(getActivity(), WebActivity.class);
+                        i.putExtra(WebActivity.ADDRESS,sb.toString());
+                        i.putExtra(WebActivity.title,localadapter.getRepAtPosition(position).getName());
+                        MyGitRepoFragment.this.startActivity(i);
                     }
                 });
 

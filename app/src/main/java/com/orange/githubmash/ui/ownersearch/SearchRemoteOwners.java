@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.orange.githubmash.ui.web.WebActivity;
 import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.R;
 import com.orange.githubmash.data.remote.RemoteOwner;
@@ -92,7 +93,16 @@ public class SearchRemoteOwners extends AppCompatActivity {
             }
         }).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                SearchRemoteOwners.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(adapter.getUserAtPosition(position).getHtmlUrl())));
+
+                String u = adapter.getUserAtPosition(position).getHtmlUrl();
+                StringBuilder sb = new StringBuilder();
+                sb.append(u);
+
+                Intent i =new Intent(SearchRemoteOwners.this, WebActivity.class);
+                i.putExtra(WebActivity.ADDRESS,sb.toString());
+                i.putExtra(WebActivity.title,adapter.getUserAtPosition(position).getLogin());
+
+                SearchRemoteOwners.this.startActivity(i);
             }
         });
 

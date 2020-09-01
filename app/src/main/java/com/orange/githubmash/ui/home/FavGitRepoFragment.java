@@ -23,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.orange.githubmash.data.Converters.RemoteToLocalConverter;
 import com.orange.githubmash.data.remote.RemoteGitRepoModel;
 import com.orange.githubmash.ui.adapters.LocalGitRepoListAdapter;
+import com.orange.githubmash.ui.web.WebActivity;
 import com.orange.githubmash.utils.ItemClickSupport;
 import com.orange.githubmash.utils.ItemClickSupport.OnItemClickListener;
 import com.orange.githubmash.utils.ItemClickSupport.OnItemLongClickListener;
@@ -81,7 +82,11 @@ public class FavGitRepoFragment extends Fragment {
                 String u = adapter.getRepAtPosition(position).getUrl();
                 StringBuilder sb = new StringBuilder();
                 sb.append(u);
-                FavGitRepoFragment.this.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(sb.toString())));
+
+                Intent i =new Intent(getActivity(), WebActivity.class);
+                i.putExtra(WebActivity.ADDRESS,sb.toString());
+                i.putExtra(WebActivity.title,adapter.getRepAtPosition(position).getName());
+                FavGitRepoFragment.this.startActivity(i);
             }
         });
 
