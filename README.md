@@ -15,3 +15,4 @@ An Android Application that lets an User add Github repositories or people to hi
 11. Search people or repositories using search bar.
 12. A navigation drawer that shows the currently logged in user and the option to logout.
 13. Swipe to refresh everywhere necessary to sync GitHub account data and app local data.
+14. Added webView to surf repos and users.
